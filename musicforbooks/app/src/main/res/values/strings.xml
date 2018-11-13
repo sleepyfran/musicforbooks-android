@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">MusicForBooks</string>
+    <string name="title_activity_main">MusicForBooks</string>
+    <string name="action_settings">Settings</string>
 </resources>
