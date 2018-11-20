@@ -7,7 +7,6 @@ import io.fgonzaleva.musicforbooks.data.api.ApiProviders
 import io.fgonzaleva.musicforbooks.data.cache.AppDatabase
 import io.fgonzaleva.musicforbooks.data.cache.CacheProviders
 import io.fgonzaleva.musicforbooks.data.repositories.RepositoryProviders
-import io.fgonzaleva.musicforbooks.ui.dashboard.Dashboard
 import io.fgonzaleva.musicforbooks.ui.dashboard.DashboardPresenter
 import org.koin.android.ext.android.startKoin
 import org.koin.dsl.module.module

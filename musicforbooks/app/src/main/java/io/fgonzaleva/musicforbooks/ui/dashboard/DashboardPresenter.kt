@@ -6,7 +6,7 @@ import io.fgonzaleva.musicforbooks.ui.base.BasePresenter
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
 
-class DashboardPresenter : BasePresenter<Dashboard.View>(), KoinComponent {
+class DashboardPresenter : BasePresenter<DashboardView>(), KoinComponent {
 
     private val feedRepository: FeedRepository by inject()
 

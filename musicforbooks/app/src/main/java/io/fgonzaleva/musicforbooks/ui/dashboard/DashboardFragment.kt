@@ -11,7 +11,7 @@ import io.fgonzaleva.musicforbooks.data.repositories.model.FeedItem
 import kotlinx.android.synthetic.main.fragment_main.*
 import org.koin.android.ext.android.inject
 
-class DashboardFragment : Fragment(), Dashboard.View, Search.OnQueryTextListener {
+class DashboardFragment : Fragment(), DashboardView, Search.OnQueryTextListener {
 
     private val presenter: DashboardPresenter by inject()
 
