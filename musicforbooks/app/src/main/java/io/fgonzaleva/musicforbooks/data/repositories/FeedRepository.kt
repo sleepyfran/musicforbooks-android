@@ -22,14 +22,7 @@ class FeedRepository : FeedRepository, KoinComponent {
             .getAll()
             .subscribeOn(Schedulers.io())
             .map { list ->
-                list.map {
-                    FeedItem(
-                        it.authorName,
-                        it.bookTitle,
-                        it.goodReadsId,
-                        it.coverUrl
-                    )
-                }
+                list.map { FeedItem.fromCache(it) }
             }
     }
 
@@ -40,54 +33,26 @@ class FeedRepository : FeedRepository, KoinComponent {
             .doOnSuccess {list ->
                 cache
                     .invalidate(
-                        list.map {
-                            FeedItemCache(
-                                authorName = it.authorName,
-                                bookTitle = it.bookTitle,
-                                goodReadsId = it.goodReadsId,
-                                coverUrl = it.coverUrl
-                            )
-                        }
+                        list.map { FeedItemCache.fromResponse(it) }
                     )
                     .blockingAwait()
             }
             .doOnSuccess { list ->
                 cache
                     .insert(
-                        list.map {
-                            FeedItemCache(
-                                authorName = it.authorName,
-                                bookTitle = it.bookTitle,
-                                goodReadsId = it.goodReadsId,
-                                coverUrl = it.coverUrl
-                            )
-                        }
+                        list.map { FeedItemCache.fromResponse(it) }
                     )
                     .blockingAwait()
             }
             .map {list ->
-                list.map {
-                    FeedItem(
-                        it.authorName,
-                        it.bookTitle,
-                        it.goodReadsId,
-                        it.coverUrl
-                    )
-                }
+                list.map { FeedItem.fromResponse(it) }
             }
     }
 
     override fun getFeed(): Single<List<FeedItem>> {
         return getCachedFeed()
             .flatMap { list ->
-                val cachedItems = list.map {
-                    FeedItemCache(
-                        authorName = it.authorName,
-                        bookTitle = it.bookTitle,
-                        goodReadsId = it.goodReadsId,
-                        coverUrl = it.coverUrl
-                    )
-                }
+                val cachedItems = list.map { FeedItemCache.fromItem(it) }
 
                 if (cacheStrategy.isCacheValid(cachedItems)) {
                     Single.just(list)
