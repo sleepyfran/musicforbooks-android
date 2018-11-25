@@ -30,7 +30,7 @@ class FeedRepository : FeedRepository, KoinComponent {
         return feedService
             .getAll()
             .subscribeOn(Schedulers.io())
-            .doOnSuccess {list ->
+            .doOnSuccess { list ->
                 cache
                     .invalidate(
                         list.map { FeedItemCache.fromResponse(it) }
@@ -44,7 +44,7 @@ class FeedRepository : FeedRepository, KoinComponent {
                     )
                     .blockingAwait()
             }
-            .map {list ->
+            .map { list ->
                 list.map { BookItem.fromFeedItemResponse(it) }
             }
     }
