@@ -1,19 +1,23 @@
 package io.fgonzaleva.musicforbooks.ui.dashboard
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.lapism.searchview.Search
 import io.fgonzaleva.musicforbooks.R
-import io.fgonzaleva.musicforbooks.data.repositories.model.FeedItem
+import io.fgonzaleva.musicforbooks.data.repositories.model.BookItem
+import io.fgonzaleva.musicforbooks.ui.components.BookListAdapter
 import kotlinx.android.synthetic.main.fragment_main.*
 import org.koin.android.ext.android.inject
 
 class DashboardFragment : Fragment(), DashboardView, Search.OnQueryTextListener {
 
     private val presenter: DashboardPresenter by inject()
+    private val adapter: BookListAdapter by inject()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -25,6 +29,15 @@ class DashboardFragment : Fragment(), DashboardView, Search.OnQueryTextListener 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         presenter.attach(this)
+
+        adapter.onBookClick = {
+            // TODO: Do something with the book item
+            Log.i("Book item", it.toString())
+        }
+
+        feedRecommendations.adapter = adapter
+        feedRecommendations.layoutManager = LinearLayoutManager(context)
+
         presenter.loadFeed()
     }
 
@@ -49,8 +62,8 @@ class DashboardFragment : Fragment(), DashboardView, Search.OnQueryTextListener 
         feedRecommendations.visibility = View.GONE
     }
 
-    override fun populateFeed(items: List<FeedItem>) {
-
+    override fun populateFeed(items: List<BookItem>) {
+        adapter.updateContent(items.toMutableList())
     }
 
     override fun showError() {

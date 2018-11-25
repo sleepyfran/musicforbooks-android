@@ -4,7 +4,7 @@ import io.fgonzaleva.musicforbooks.data.api.FeedService
 import io.fgonzaleva.musicforbooks.data.cache.interfaces.CacheStrategy
 import io.fgonzaleva.musicforbooks.data.cache.interfaces.FeedCache
 import io.fgonzaleva.musicforbooks.data.cache.model.FeedItemCache
-import io.fgonzaleva.musicforbooks.data.repositories.model.FeedItem
+import io.fgonzaleva.musicforbooks.data.repositories.model.BookItem
 import io.fgonzaleva.musicforbooks.data.repositories.interfaces.FeedRepository
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
@@ -17,16 +17,16 @@ class FeedRepository : FeedRepository, KoinComponent {
     private val cacheStrategy: CacheStrategy by inject()
     private val feedService: FeedService by inject()
 
-    private fun getCachedFeed(): Single<List<FeedItem>> {
+    private fun getCachedFeed(): Single<List<BookItem>> {
         return cache
             .getAll()
             .subscribeOn(Schedulers.io())
             .map { list ->
-                list.map { FeedItem.fromCache(it) }
+                list.map { BookItem.fromFeedItemCache(it) }
             }
     }
 
-    private fun requestFeed(): Single<List<FeedItem>> {
+    private fun requestFeed(): Single<List<BookItem>> {
         return feedService
             .getAll()
             .subscribeOn(Schedulers.io())
@@ -45,11 +45,11 @@ class FeedRepository : FeedRepository, KoinComponent {
                     .blockingAwait()
             }
             .map {list ->
-                list.map { FeedItem.fromResponse(it) }
+                list.map { BookItem.fromFeedItemResponse(it) }
             }
     }
 
-    override fun getFeed(): Single<List<FeedItem>> {
+    override fun getFeed(): Single<List<BookItem>> {
         return getCachedFeed()
             .flatMap { list ->
                 val cachedItems = list.map { FeedItemCache.fromItem(it) }

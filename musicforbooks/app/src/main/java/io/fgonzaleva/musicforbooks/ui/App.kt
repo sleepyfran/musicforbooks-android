@@ -7,6 +7,7 @@ import io.fgonzaleva.musicforbooks.data.api.ApiProviders
 import io.fgonzaleva.musicforbooks.data.cache.AppDatabase
 import io.fgonzaleva.musicforbooks.data.cache.CacheProviders
 import io.fgonzaleva.musicforbooks.data.repositories.RepositoryProviders
+import io.fgonzaleva.musicforbooks.ui.components.BookListAdapter
 import io.fgonzaleva.musicforbooks.ui.dashboard.DashboardPresenter
 import org.koin.android.ext.android.startKoin
 import org.koin.dsl.module.module
@@ -36,8 +37,9 @@ class App : Application() {
         ).build()
 
         // Initialize the Retrofit service.
+        val baseUrl = BuildConfig.BASE_API_URL
         retrofit = Retrofit.Builder()
-            .baseUrl(BuildConfig.BASE_API_URL)
+            .baseUrl(baseUrl)
             .addConverterFactory(GsonConverterFactory.create())
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .build()
@@ -55,13 +57,18 @@ class App : Application() {
             factory { DashboardPresenter() }
         }
 
+        val adaptersModule = module {
+            factory { BookListAdapter() }
+        }
+
         startKoin(applicationContext, listOf(
             databaseModule,
             retrofitModule,
             CacheProviders().module,
             ApiProviders().module,
             RepositoryProviders().module,
-            presentersModule
+            presentersModule,
+            adaptersModule
         ))
     }
 }

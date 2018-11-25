@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import io.fgonzaleva.musicforbooks.data.api.model.FeedItemResponse
-import io.fgonzaleva.musicforbooks.data.repositories.model.FeedItem
+import io.fgonzaleva.musicforbooks.data.repositories.model.BookItem
 import java.util.*
 
 @Entity(tableName = "feedcache")
@@ -15,9 +15,9 @@ data class FeedItemCache(
     @ColumnInfo(name = "goodreads_id") var goodReadsId: Int,
     @ColumnInfo(name = "cover_url") var coverUrl: String
 ) {
-    companion object {
 
-        fun fromItem(item: FeedItem): FeedItemCache {
+    companion object {
+        fun fromItem(item: BookItem): FeedItemCache {
             return FeedItemCache(
                 authorName = item.authorName,
                 bookTitle = item.bookTitle,
@@ -34,6 +34,6 @@ data class FeedItemCache(
                 coverUrl = response.coverUrl
             )
         }
-
     }
+
 }
