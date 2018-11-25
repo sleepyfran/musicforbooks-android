@@ -11,6 +11,7 @@ import io.fgonzaleva.musicforbooks.ui.dashboard.DashboardPresenter
 import org.koin.android.ext.android.startKoin
 import org.koin.dsl.module.module
 import retrofit2.Retrofit
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
 class App : Application() {
@@ -38,6 +39,7 @@ class App : Application() {
         retrofit = Retrofit.Builder()
             .baseUrl(BuildConfig.BASE_API_URL)
             .addConverterFactory(GsonConverterFactory.create())
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .build()
 
         // Initialize dependency injection.
