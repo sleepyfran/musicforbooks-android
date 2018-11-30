@@ -5,6 +5,7 @@ import io.fgonzaleva.musicforbooks.data.api.interfaces.FeedService
 import io.fgonzaleva.musicforbooks.data.api.model.FeedItemResponse
 import io.fgonzaleva.musicforbooks.data.cache.interfaces.CacheStrategy
 import io.fgonzaleva.musicforbooks.data.repositories.interfaces.FeedRepository
+import io.fgonzaleva.musicforbooks.data.repositories.model.BookItem
 import io.reactivex.Single
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -56,7 +57,10 @@ class FeedRepositoryTest : BaseTest(), KoinTest {
             .getFeed()
             .subscribe { list ->
                 list.forEach { item ->
-                    assertThat(item).isEqualTo(feedItemResponse)
+                    assertThat(item)
+                        .isEqualToComparingFieldByField(
+                            BookItem.fromFeedItemResponse(feedItemResponse)
+                        )
                 }
             }
     }
@@ -71,7 +75,10 @@ class FeedRepositoryTest : BaseTest(), KoinTest {
             .getFeed()
             .subscribe { list ->
                 list.forEach { item ->
-                    assertThat(item).isEqualToComparingFieldByField(feedItemResponse)
+                    assertThat(item)
+                        .isEqualToComparingFieldByField(
+                            BookItem.fromFeedItemResponse(feedItemResponse)
+                        )
                 }
             }
     }
