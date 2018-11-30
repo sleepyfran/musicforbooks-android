@@ -1,7 +1,7 @@
 package io.fgonzaleva.musicforbooks.ui.dashboard
 
+import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +11,7 @@ import com.lapism.searchview.Search
 import io.fgonzaleva.musicforbooks.R
 import io.fgonzaleva.musicforbooks.data.repositories.model.BookItem
 import io.fgonzaleva.musicforbooks.ui.components.BookListAdapter
+import io.fgonzaleva.musicforbooks.ui.search.SearchActivity
 import kotlinx.android.synthetic.main.fragment_main.*
 import org.koin.android.ext.android.inject
 
@@ -30,9 +31,9 @@ class DashboardFragment : Fragment(), DashboardView, Search.OnQueryTextListener 
         super.onViewCreated(view, savedInstanceState)
         presenter.attach(this)
 
+        search.setOnQueryTextListener(this)
         adapter.onBookClick = {
             // TODO: Do something with the book item
-            Log.i("Book item", it.toString())
         }
 
         feedRecommendations.adapter = adapter
@@ -75,7 +76,10 @@ class DashboardFragment : Fragment(), DashboardView, Search.OnQueryTextListener 
     }
 
     override fun onQueryTextSubmit(query: CharSequence?): Boolean {
-        presenter.handleSearch(query.toString())
+        val searchIntent = Intent(activity, SearchActivity::class.java)
+        searchIntent.putExtra(SearchActivity.SEARCH_QUERY_EXTRA, query)
+        startActivity(searchIntent)
+
         return true
     }
 

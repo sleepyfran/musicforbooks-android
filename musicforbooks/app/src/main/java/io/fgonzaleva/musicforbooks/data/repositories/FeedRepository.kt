@@ -1,6 +1,6 @@
 package io.fgonzaleva.musicforbooks.data.repositories
 
-import io.fgonzaleva.musicforbooks.data.api.FeedService
+import io.fgonzaleva.musicforbooks.data.api.interfaces.FeedService
 import io.fgonzaleva.musicforbooks.data.cache.interfaces.CacheStrategy
 import io.fgonzaleva.musicforbooks.data.cache.interfaces.FeedCache
 import io.fgonzaleva.musicforbooks.data.cache.model.FeedItemCache

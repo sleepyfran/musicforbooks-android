@@ -1,7 +1,7 @@
 package io.fgonzaleva.musicforbooks.data.repositories
 
 import io.fgonzaleva.musicforbooks.BaseTest
-import io.fgonzaleva.musicforbooks.data.api.FeedService
+import io.fgonzaleva.musicforbooks.data.api.interfaces.FeedService
 import io.fgonzaleva.musicforbooks.data.api.model.FeedItemResponse
 import io.fgonzaleva.musicforbooks.data.cache.interfaces.CacheStrategy
 import io.fgonzaleva.musicforbooks.data.repositories.interfaces.FeedRepository

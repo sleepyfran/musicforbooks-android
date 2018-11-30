@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import io.fgonzaleva.musicforbooks.R
 import io.fgonzaleva.musicforbooks.data.repositories.model.BookItem
-import kotlinx.android.synthetic.main.feed_card_item.view.*
+import kotlinx.android.synthetic.main.item_feed_card.view.*
 
 class BookListAdapter() : RecyclerView.Adapter<BookListAdapter.ViewHolder>() {
 
@@ -23,7 +23,7 @@ class BookListAdapter() : RecyclerView.Adapter<BookListAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater
                         .from(parent.context)
-                        .inflate(R.layout.feed_card_item, parent, false)
+                        .inflate(R.layout.item_feed_card, parent, false)
         val holder = ViewHolder(view)
 
         holder.itemView.setOnClickListener {

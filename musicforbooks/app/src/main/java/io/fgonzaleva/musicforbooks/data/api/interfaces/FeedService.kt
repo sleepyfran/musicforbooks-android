@@ -1,4 +1,4 @@
-package io.fgonzaleva.musicforbooks.data.api
+package io.fgonzaleva.musicforbooks.data.api.interfaces
 
 import io.fgonzaleva.musicforbooks.data.api.model.FeedItemResponse
 import io.reactivex.Single

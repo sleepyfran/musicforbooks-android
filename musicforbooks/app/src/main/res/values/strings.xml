@@ -9,4 +9,5 @@
     <string name="book_placeholder_author">Author</string>
 
     <string name="error_loading">There was an error loading the content. Try again later</string>
+    <string name="search_no_results">No results. Try with another query</string>
 </resources>

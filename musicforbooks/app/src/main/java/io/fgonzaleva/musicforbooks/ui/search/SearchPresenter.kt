@@ -1,28 +1,27 @@
-package io.fgonzaleva.musicforbooks.ui.dashboard
+package io.fgonzaleva.musicforbooks.ui.search
 
-import android.util.Log
-import io.fgonzaleva.musicforbooks.data.repositories.interfaces.FeedRepository
+import io.fgonzaleva.musicforbooks.data.repositories.interfaces.SearchRepository
 import io.fgonzaleva.musicforbooks.ui.base.BasePresenter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
 
-class DashboardPresenter : BasePresenter<DashboardView>(), KoinComponent {
+class SearchPresenter : BasePresenter<SearchView>(), KoinComponent {
 
-    private val feedRepository: FeedRepository by inject()
+    private val searchRepository: SearchRepository by inject()
 
-    fun loadFeed() {
-        view?.hideFeed()
+    fun loadResults(query: String) {
+        view?.hideResults()
         view?.showLoading()
 
-        val feed = feedRepository
-            .getFeed()
+        val search = searchRepository
+            .searchBook(query)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 {
                     view?.hideLoading()
-                    view?.showFeed()
-                    view?.populateFeed(it)
+                    view?.showResults()
+                    view?.populateResults(it)
                 },
                 {
                     view?.hideLoading()
@@ -30,7 +29,7 @@ class DashboardPresenter : BasePresenter<DashboardView>(), KoinComponent {
                 }
             )
 
-        addDisposable(feed)
+        addDisposable(search)
     }
 
 }
