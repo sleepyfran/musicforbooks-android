@@ -5,15 +5,8 @@ import com.tickaroo.tikxml.annotation.Path
 import com.tickaroo.tikxml.annotation.PropertyElement
 import com.tickaroo.tikxml.annotation.Xml
 
-@Xml(name = "GoodreadsResponse")
-data class SearchBookResultResponse(
-    @Path("search/results")
-    @Element(name = "work")
-    val results: List<SearchBookResultItem>
-)
-
 @Xml(name = "work")
-data class SearchBookResultItem(
+data class BookResultResponse(
     @Path("best_book")
     @PropertyElement(name = "id")
     val goodReadsId: Int,
@@ -24,7 +17,7 @@ data class SearchBookResultItem(
 
     @Path("best_book")
     @Element(name = "author")
-    val author: Author,
+    val author: AuthorResultResponse,
 
     @Path("best_book")
     @PropertyElement(name = "image_url")
