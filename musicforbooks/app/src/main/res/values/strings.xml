@@ -10,4 +10,14 @@
 
     <string name="error_loading">There was an error loading the content. Try again later</string>
     <string name="search_no_results">No results. Try with another query</string>
+
+    <string name="book_only_instrumental">Only instrumental</string>
+    <string name="book_sort_by">Sort by</string>
+
+    <string-array name="book_available_sorts">
+        <item>name</item>
+        <item>band</item>
+    </string-array>
+
+    <string name="book_see_on_goodreads">Open on GoodReads</string>
 </resources>

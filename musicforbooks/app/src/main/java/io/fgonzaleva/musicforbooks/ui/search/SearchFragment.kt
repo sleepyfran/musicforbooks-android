@@ -1,5 +1,6 @@
 package io.fgonzaleva.musicforbooks.ui.search
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -9,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 
 import io.fgonzaleva.musicforbooks.R
 import io.fgonzaleva.musicforbooks.data.repositories.model.BookItem
+import io.fgonzaleva.musicforbooks.ui.book.BookActivity
 import io.fgonzaleva.musicforbooks.ui.components.BookListAdapter
 import kotlinx.android.synthetic.main.fragment_search.*
 import org.koin.android.ext.android.inject
@@ -39,7 +41,8 @@ class SearchFragment : Fragment(), SearchView, KoinComponent {
         presenter.attach(this)
 
         adapter.onBookClick = {
-            // TODO: Do something with the book item
+            val bookDetailsIntent = BookActivity.createIntent(context!!, it.bookTitle, it.goodReadsId)
+            startActivity(bookDetailsIntent)
         }
 
         resultItems.adapter = adapter

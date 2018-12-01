@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.lapism.searchview.Search
 import io.fgonzaleva.musicforbooks.R
 import io.fgonzaleva.musicforbooks.data.repositories.model.BookItem
+import io.fgonzaleva.musicforbooks.ui.book.BookActivity
 import io.fgonzaleva.musicforbooks.ui.components.BookListAdapter
 import io.fgonzaleva.musicforbooks.ui.search.SearchActivity
 import kotlinx.android.synthetic.main.fragment_main.*
@@ -33,7 +34,8 @@ class DashboardFragment : Fragment(), DashboardView, Search.OnQueryTextListener 
 
         search.setOnQueryTextListener(this)
         adapter.onBookClick = {
-            // TODO: Do something with the book item
+            val bookDetailsIntent = BookActivity.createIntent(context!!, it.bookTitle, it.goodReadsId)
+            startActivity(bookDetailsIntent)
         }
 
         feedRecommendations.adapter = adapter

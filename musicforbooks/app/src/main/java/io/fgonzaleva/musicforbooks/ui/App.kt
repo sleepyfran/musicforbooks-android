@@ -10,6 +10,7 @@ import io.fgonzaleva.musicforbooks.data.api.CredentialsProvider
 import io.fgonzaleva.musicforbooks.data.cache.AppDatabase
 import io.fgonzaleva.musicforbooks.data.cache.CacheProviders
 import io.fgonzaleva.musicforbooks.data.repositories.RepositoryProviders
+import io.fgonzaleva.musicforbooks.ui.book.BookPresenter
 import io.fgonzaleva.musicforbooks.ui.components.BookListAdapter
 import io.fgonzaleva.musicforbooks.ui.dashboard.DashboardPresenter
 import io.fgonzaleva.musicforbooks.ui.search.SearchPresenter
@@ -77,6 +78,7 @@ class App : Application() {
         val presentersModule = module {
             factory { DashboardPresenter() }
             factory { SearchPresenter() }
+            factory { BookPresenter() }
         }
 
         val adaptersModule = module {

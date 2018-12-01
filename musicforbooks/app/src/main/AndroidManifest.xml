@@ -25,6 +25,10 @@
         <activity
             android:name=".ui.search.SearchActivity"
             android:label="@string/title_activity_main"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".ui.book.BookActivity"
+            android:label="@string/title_activity_main"
             android:theme="@style/AppTheme"></activity>
     </application>
 
