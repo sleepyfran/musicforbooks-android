@@ -1,6 +1,5 @@
 package io.fgonzaleva.musicforbooks.data.api.model.goodreads
 
-import com.tickaroo.tikxml.annotation.Element
 import com.tickaroo.tikxml.annotation.Path
 import com.tickaroo.tikxml.annotation.PropertyElement
 import com.tickaroo.tikxml.annotation.Xml
@@ -15,9 +14,13 @@ data class BookResultResponse(
     @PropertyElement(name = "title")
     val title: String,
 
-    @Path("best_book")
-    @Element(name = "author")
-    val author: AuthorResultResponse,
+    @Path("best_book/author")
+    @PropertyElement(name = "id")
+    val authorGoodReadsId: Int,
+
+    @Path("best_book/author")
+    @PropertyElement(name = "name")
+    val authorName: String,
 
     @Path("best_book")
     @PropertyElement(name = "image_url")

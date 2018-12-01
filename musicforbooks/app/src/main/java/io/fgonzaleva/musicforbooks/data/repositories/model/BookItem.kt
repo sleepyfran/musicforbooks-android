@@ -32,7 +32,7 @@ data class BookItem(
 
         fun fromGoodReadsSearchResponse(response: BookResultResponse): BookItem {
             return BookItem(
-                response.author.name,
+                response.authorName,
                 response.title,
                 response.goodReadsId,
                 response.imageUrl
