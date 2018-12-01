@@ -30,7 +30,7 @@ data class BookItem(
             )
         }
 
-        fun fromGoodReadsSearchResponse(response: BookResultResponse): BookItem {
+        fun fromBookResultResponse(response: BookResultResponse): BookItem {
             return BookItem(
                 response.authorName,
                 response.title,

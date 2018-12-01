@@ -54,4 +54,9 @@ class BookActivity : AppCompatActivity() {
             .commit()
     }
 
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
+    }
+
 }

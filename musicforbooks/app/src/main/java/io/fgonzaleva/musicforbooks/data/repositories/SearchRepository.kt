@@ -20,7 +20,7 @@ class SearchRepository : SearchRepository, KoinComponent {
             .subscribeOn(Schedulers.io())
             .map { response ->
                 response.results.map {
-                    BookItem.fromGoodReadsSearchResponse(it)
+                    BookItem.fromBookResultResponse(it)
                 }
             }
     }
