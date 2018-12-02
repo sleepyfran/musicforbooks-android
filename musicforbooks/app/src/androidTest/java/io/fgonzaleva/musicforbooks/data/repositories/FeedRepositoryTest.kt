@@ -3,11 +3,13 @@ package io.fgonzaleva.musicforbooks.data.repositories
 import io.fgonzaleva.musicforbooks.BaseTest
 import io.fgonzaleva.musicforbooks.data.api.interfaces.FeedService
 import io.fgonzaleva.musicforbooks.data.api.model.FeedItemResponse
+import io.fgonzaleva.musicforbooks.data.cache.AppDatabase
 import io.fgonzaleva.musicforbooks.data.cache.interfaces.CacheStrategy
 import io.fgonzaleva.musicforbooks.data.repositories.interfaces.FeedRepository
 import io.fgonzaleva.musicforbooks.data.repositories.model.BookItem
 import io.reactivex.Single
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.koin.standalone.inject
@@ -34,7 +36,7 @@ class FeedRepositoryTest : BaseTest(), KoinTest {
     fun setup() {
         val mockDatabase = buildMockDatabase()
 
-        declare { buildSingleModule(mockDatabase) }
+        declare { single(override = true) { mockDatabase } }
         cacheStrategy = declareMock()
         feedService = declareMock()
 

@@ -14,20 +14,7 @@ open class BaseTest {
                 InstrumentationRegistry.getInstrumentation().context,
                 AppDatabase::class.java
             )
-            .allowMainThreadQueries()
             .build()
-    }
-
-    inline fun <reified T : Any> buildSingleModule(dependency: T): Module {
-        return module {
-            single { dependency }
-        }
-    }
-
-    inline fun <reified T : Any> buildFactoryModule(dependency: T): Module {
-        return module {
-            factory { dependency }
-        }
     }
 
 }
