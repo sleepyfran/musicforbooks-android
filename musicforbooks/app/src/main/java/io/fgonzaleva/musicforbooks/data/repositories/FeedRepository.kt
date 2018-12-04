@@ -1,6 +1,6 @@
 package io.fgonzaleva.musicforbooks.data.repositories
 
-import io.fgonzaleva.musicforbooks.data.api.interfaces.FeedService
+import io.fgonzaleva.musicforbooks.data.api.interfaces.MusicForBooksService
 import io.fgonzaleva.musicforbooks.data.cache.interfaces.CacheStrategy
 import io.fgonzaleva.musicforbooks.data.cache.interfaces.FeedCache
 import io.fgonzaleva.musicforbooks.data.cache.model.FeedItemCache
@@ -10,12 +10,13 @@ import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
+import java.util.concurrent.TimeUnit
 
 class FeedRepository : FeedRepository, KoinComponent {
 
     private val cache: FeedCache by inject()
     private val cacheStrategy: CacheStrategy by inject()
-    private val feedService: FeedService by inject()
+    private val musicForBooksService: MusicForBooksService by inject()
 
     private fun getCachedFeed(): Single<List<BookItem>> {
         return cache
@@ -27,22 +28,22 @@ class FeedRepository : FeedRepository, KoinComponent {
     }
 
     private fun requestFeed(): Single<List<BookItem>> {
-        return feedService
-            .getAll()
+        return musicForBooksService
+            .getFeed()
             .subscribeOn(Schedulers.io())
             .doOnSuccess { list ->
                 cache
                     .invalidate(
                         list.map { FeedItemCache.fromResponse(it) }
                     )
-                    .blockingAwait()
+                    .blockingAwait(5, TimeUnit.SECONDS)
             }
             .doOnSuccess { list ->
                 cache
                     .insert(
                         list.map { FeedItemCache.fromResponse(it) }
                     )
-                    .blockingAwait()
+                    .blockingAwait(5, TimeUnit.SECONDS)
             }
             .map { list ->
                 list.map { BookItem.fromFeedItemResponse(it) }

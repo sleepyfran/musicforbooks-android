@@ -8,6 +8,7 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface GoodReadsService {
+
     @GET("/search/index.xml")
     fun search(
         @Query("q") query: String,
@@ -21,4 +22,5 @@ interface GoodReadsService {
         @Path("id") bookId: Int,
         @Query("key") key: String
     ): Single<BookResponse>
+
 }

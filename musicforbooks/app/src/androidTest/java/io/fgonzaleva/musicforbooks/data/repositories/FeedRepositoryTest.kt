@@ -1,15 +1,13 @@
 package io.fgonzaleva.musicforbooks.data.repositories
 
 import io.fgonzaleva.musicforbooks.BaseTest
-import io.fgonzaleva.musicforbooks.data.api.interfaces.FeedService
+import io.fgonzaleva.musicforbooks.data.api.interfaces.MusicForBooksService
 import io.fgonzaleva.musicforbooks.data.api.model.FeedItemResponse
-import io.fgonzaleva.musicforbooks.data.cache.AppDatabase
 import io.fgonzaleva.musicforbooks.data.cache.interfaces.CacheStrategy
 import io.fgonzaleva.musicforbooks.data.repositories.interfaces.FeedRepository
 import io.fgonzaleva.musicforbooks.data.repositories.model.BookItem
 import io.reactivex.Single
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.koin.standalone.inject
@@ -22,7 +20,7 @@ import org.mockito.Mockito
 class FeedRepositoryTest : BaseTest(), KoinTest {
 
     private val feedRepository: FeedRepository by inject()
-    private lateinit var feedService: FeedService
+    private lateinit var musicForBooksService: MusicForBooksService
     private lateinit var cacheStrategy: CacheStrategy
 
     private val feedItemResponse = FeedItemResponse(
@@ -34,14 +32,12 @@ class FeedRepositoryTest : BaseTest(), KoinTest {
 
     @Before
     fun setup() {
-        val mockDatabase = buildMockDatabase()
-
-        declare { single(override = true) { mockDatabase } }
+        buildMockDatabase()
         cacheStrategy = declareMock()
-        feedService = declareMock()
+        musicForBooksService = declareMock()
 
         Mockito
-            .`when`(feedService.getAll())
+            .`when`(musicForBooksService.getFeed())
             .thenReturn(Single.just(
                 listOf(
                     feedItemResponse

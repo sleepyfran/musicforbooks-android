@@ -21,6 +21,8 @@ android {
         debug {
             buildConfigField 'String', 'BASE_API_URL', "\"http://10.0.2.2:8080/api/\""
             buildConfigField 'String', 'BASE_GOODREADS_URL', "\"https://www.goodreads.com/\""
+            buildConfigField 'String', 'BASE_SPOTIFY_AUTH_URL', "\"https://accounts.spotify.com/api/\""
+            buildConfigField 'String', 'BASE_SPOTIFY_URL', "\"https://api.spotify.com/v1/\""
 
             /* API KEYS */
             // These keys should live inside your .gradle/gradle.properties field in order to not expose them to source control
@@ -62,6 +64,7 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxjava:2.2.3"
     implementation "io.reactivex.rxjava2:rxandroid:2.1.0"
     implementation "joda-time:joda-time:2.10.1"
+    implementation "commons-codec:commons-codec:1.10"
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
