@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.transaction
 import io.fgonzaleva.musicforbooks.R
 import io.fgonzaleva.musicforbooks.data.repositories.model.BookItem
 
@@ -48,10 +49,9 @@ class BookActivity : AppCompatActivity() {
         }
 
         val fragment = BookFragment.create(bookId, onBookLoaded)
-        supportFragmentManager
-            .beginTransaction()
-            .add(R.id.fragment, fragment)
-            .commit()
+        supportFragmentManager.transaction {
+            replace(R.id.fragment, fragment)
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {

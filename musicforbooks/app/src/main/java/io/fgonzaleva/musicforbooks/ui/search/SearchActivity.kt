@@ -2,6 +2,7 @@ package io.fgonzaleva.musicforbooks.ui.search
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.transaction
 import io.fgonzaleva.musicforbooks.R
 import kotlinx.android.synthetic.main.activity_search.*
 
@@ -23,10 +24,9 @@ class SearchActivity : AppCompatActivity() {
         supportActionBar?.title = searchQuery
 
         val fragment = SearchFragment.create(searchQuery)
-        supportFragmentManager
-            .beginTransaction()
-            .add(R.id.fragment, fragment)
-            .commit()
+        supportFragmentManager.transaction {
+            replace(R.id.fragment, fragment)
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
