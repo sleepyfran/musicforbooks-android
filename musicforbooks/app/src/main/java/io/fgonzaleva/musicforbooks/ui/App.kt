@@ -11,14 +11,12 @@ import io.fgonzaleva.musicforbooks.data.api.HeaderProvider
 import io.fgonzaleva.musicforbooks.data.cache.AppDatabase
 import io.fgonzaleva.musicforbooks.data.cache.CacheProviders
 import io.fgonzaleva.musicforbooks.data.repositories.RepositoryProviders
-import io.fgonzaleva.musicforbooks.ui.book.BookPresenter
+import io.fgonzaleva.musicforbooks.ui.book.BookViewModel
 import io.fgonzaleva.musicforbooks.ui.components.BookListAdapter
-import io.fgonzaleva.musicforbooks.ui.dashboard.DashboardPresenter
-import io.fgonzaleva.musicforbooks.ui.search.SearchPresenter
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
+import io.fgonzaleva.musicforbooks.ui.dashboard.DashboardViewModel
+import io.fgonzaleva.musicforbooks.ui.search.SearchViewModel
 import org.koin.android.ext.android.startKoin
-import org.koin.dsl.module.Module
+import org.koin.androidx.viewmodel.ext.koin.viewModel
 import org.koin.dsl.module.module
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -57,10 +55,10 @@ class App : Application() {
             }
         }
 
-        val presentersModule = module {
-            factory { DashboardPresenter() }
-            factory { SearchPresenter() }
-            factory { BookPresenter() }
+        val viewModelsModule = module {
+            viewModel { DashboardViewModel(get()) }
+            viewModel { SearchViewModel(get()) }
+            viewModel { BookViewModel(get()) }
         }
 
         val adaptersModule = module {
@@ -73,7 +71,7 @@ class App : Application() {
             CacheProviders().module,
             ApiProviders().module,
             RepositoryProviders().module,
-            presentersModule,
+            viewModelsModule,
             adaptersModule
         ))
     }

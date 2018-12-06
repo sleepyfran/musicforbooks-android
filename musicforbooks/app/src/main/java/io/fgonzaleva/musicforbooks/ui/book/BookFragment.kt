@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import io.fgonzaleva.musicforbooks.R
@@ -14,9 +15,10 @@ import io.fgonzaleva.musicforbooks.data.repositories.model.Book
 import io.fgonzaleva.musicforbooks.data.repositories.model.BookItem
 import kotlinx.android.synthetic.main.fragment_book.*
 import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.standalone.KoinComponent
 
-class BookFragment : Fragment(), BookView, KoinComponent {
+class BookFragment : Fragment() {
 
     companion object {
         fun create(bookId: Int, onBookLoaded: (book: BookItem) -> Unit) =
@@ -26,7 +28,7 @@ class BookFragment : Fragment(), BookView, KoinComponent {
             }
     }
 
-    private val presenter: BookPresenter by inject()
+    private val viewModel by viewModel<BookViewModel>()
     private var bookId: Int = 0
     private lateinit var onBookLoaded: (book: BookItem) -> Unit
 
@@ -39,19 +41,32 @@ class BookFragment : Fragment(), BookView, KoinComponent {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        presenter.attach(this)
-        presenter.loadBook(bookId)
+
+        viewModel.bookData.observe(this, Observer { response ->
+            when (response) {
+                is BookResponse.Loading -> showLoading()
+                is BookResponse.Success -> showBook(response.book)
+                is BookResponse.Error -> showError()
+            }
+        })
+
+        viewModel.loadBook(bookId)
     }
 
-    override fun showLoading() {
+    fun showLoading() {
+        hideContent()
+        hideError()
         loading.visibility = View.VISIBLE
     }
 
-    override fun hideLoading() {
+    fun hideLoading() {
         loading.visibility = View.GONE
     }
 
-    override fun showBook(book: Book) {
+    fun showBook(book: Book) {
+        hideLoading()
+        hideError()
+
         bookTitle.text = book.title
         authorName.text = book.authorName
         bookRating.rating = book.rating
@@ -65,21 +80,25 @@ class BookFragment : Fragment(), BookView, KoinComponent {
             .with(this)
             .load(book.coverUrl)
             .into(bookCover)
+
+        showContent()
     }
 
-    override fun showContent() {
+    fun showContent() {
         content.visibility = View.VISIBLE
     }
 
-    override fun hideContent() {
+    fun hideContent() {
         content.visibility = View.GONE
     }
 
-    override fun showError() {
+    fun showError() {
+        hideLoading()
+        hideContent()
         error.visibility = View.VISIBLE
     }
 
-    override fun hideError() {
+    fun hideError() {
         error.visibility = View.GONE
     }
 }

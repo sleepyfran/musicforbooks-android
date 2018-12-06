@@ -1,22 +1,21 @@
 package io.fgonzaleva.musicforbooks.ui.search
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-
 import io.fgonzaleva.musicforbooks.R
 import io.fgonzaleva.musicforbooks.data.repositories.model.BookItem
 import io.fgonzaleva.musicforbooks.ui.book.BookActivity
 import io.fgonzaleva.musicforbooks.ui.components.BookListAdapter
 import kotlinx.android.synthetic.main.fragment_search.*
 import org.koin.android.ext.android.inject
-import org.koin.standalone.KoinComponent
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SearchFragment : Fragment(), SearchView, KoinComponent {
+class SearchFragment : Fragment() {
 
     companion object {
         fun create(query: String) =
@@ -25,7 +24,7 @@ class SearchFragment : Fragment(), SearchView, KoinComponent {
                 }
     }
 
-    private val presenter: SearchPresenter by inject()
+    private val viewModel by viewModel<SearchViewModel>()
     private lateinit var query: String
     private val adapter: BookListAdapter by inject()
 
@@ -38,45 +37,59 @@ class SearchFragment : Fragment(), SearchView, KoinComponent {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        presenter.attach(this)
 
         adapter.onBookClick = {
             val bookDetailsIntent = BookActivity.createIntent(context!!, it.bookTitle, it.goodReadsId)
             startActivity(bookDetailsIntent)
         }
 
+        viewModel.searchData.observe(this, Observer { response ->
+            when (response) {
+                is SearchResponse.Loading -> showLoading()
+                is SearchResponse.Success -> populateResults(response.results)
+                is SearchResponse.Error -> showError()
+            }
+        })
+
         resultItems.adapter = adapter
         resultItems.layoutManager = LinearLayoutManager(context)
 
-        presenter.loadResults(query)
+        viewModel.loadResults(query)
     }
 
-    override fun showError() {
+    fun showError() {
+        hideLoading()
+        hideResults()
         noResultsError.visibility = View.VISIBLE
     }
 
-    override fun hideError() {
+    fun hideError() {
         noResultsError.visibility = View.GONE
     }
 
-    override fun showLoading() {
+    fun showLoading() {
+        hideResults()
+        hideError()
         loading.visibility = View.VISIBLE
     }
 
-    override fun hideLoading() {
+    fun hideLoading() {
         loading.visibility = View.GONE
     }
 
-    override fun showResults() {
+    fun showResults() {
+        hideLoading()
+        hideError()
         resultItems.visibility = View.VISIBLE
     }
 
-    override fun hideResults() {
+    fun hideResults() {
         resultItems.visibility = View.GONE
     }
 
-    override fun populateResults(results: List<BookItem>) {
+    fun populateResults(results: List<BookItem>) {
         adapter.updateContent(results.toMutableList())
+        showResults()
     }
 
 }

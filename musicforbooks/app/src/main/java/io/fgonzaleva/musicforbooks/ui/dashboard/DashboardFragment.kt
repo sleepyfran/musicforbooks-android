@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.lapism.searchview.Search
 import io.fgonzaleva.musicforbooks.R
@@ -15,10 +16,11 @@ import io.fgonzaleva.musicforbooks.ui.components.BookListAdapter
 import io.fgonzaleva.musicforbooks.ui.search.SearchActivity
 import kotlinx.android.synthetic.main.fragment_main.*
 import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class DashboardFragment : Fragment(), DashboardView, Search.OnQueryTextListener {
+class DashboardFragment : Fragment(), Search.OnQueryTextListener {
 
-    private val presenter: DashboardPresenter by inject()
+    private val viewModel by viewModel<DashboardViewModel>()
     private val adapter: BookListAdapter by inject()
 
     override fun onCreateView(
@@ -30,7 +32,6 @@ class DashboardFragment : Fragment(), DashboardView, Search.OnQueryTextListener 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        presenter.attach(this)
 
         search.setOnQueryTextListener(this)
         adapter.onBookClick = {
@@ -38,42 +39,53 @@ class DashboardFragment : Fragment(), DashboardView, Search.OnQueryTextListener 
             startActivity(bookDetailsIntent)
         }
 
+        viewModel.feedData.observe(this, Observer { response ->
+            when (response) {
+                is DashboardResponse.Loading -> showLoading()
+                is DashboardResponse.Success -> showData(response.feedData)
+                is DashboardResponse.Error -> showError()
+            }
+        })
+
         feedRecommendations.adapter = adapter
         feedRecommendations.layoutManager = LinearLayoutManager(context)
 
-        presenter.loadFeed()
+        viewModel.loadFeed()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        presenter.detach()
-    }
-
-    override fun showLoading() {
+    private fun showLoading() {
+        hideFeed()
+        hideError()
         loading.visibility = View.VISIBLE
     }
 
-    override fun hideLoading() {
+    private fun hideLoading() {
         loading.visibility = View.GONE
     }
 
-    override fun showFeed() {
+    private fun showData(feedData: List<BookItem>) {
+        hideLoading()
+        adapter.updateContent(feedData.toMutableList())
+        showFeed()
+    }
+
+    private fun showFeed() {
+        hideLoading()
+        hideError()
         feedRecommendations.visibility = View.VISIBLE
     }
 
-    override fun hideFeed() {
+    private fun hideFeed() {
         feedRecommendations.visibility = View.GONE
     }
 
-    override fun populateFeed(items: List<BookItem>) {
-        adapter.updateContent(items.toMutableList())
-    }
-
-    override fun showError() {
+    private fun showError() {
+        hideLoading()
+        hideFeed()
         error.visibility = View.VISIBLE
     }
 
-    override fun hideError() {
+    private fun hideError() {
         error.visibility = View.GONE
     }
 
