@@ -35,16 +35,14 @@ class SpotifyTokenRepository : SpotifyTokenRepository, KoinComponent {
                     .map { response ->
                         SpotifyTokenItemCache.fromResponse(response)
                     }
-                    .doOnSuccess { cacheItem ->
+                    .doOnSuccess {
                         Completable
                             .fromAction(spotifyTokenCache::invalidate)
-                            .andThen {
-                                spotifyTokenCache
-                                    .insert(cacheItem)
-                                    .subscribe {
-                                        it.onComplete()
-                                    }
-                            }
+                            .blockingAwait(5, TimeUnit.SECONDS)
+                    }
+                    .doOnSuccess {
+                        spotifyTokenCache
+                            .insert(it)
                             .blockingAwait(5, TimeUnit.SECONDS)
                     }
             })

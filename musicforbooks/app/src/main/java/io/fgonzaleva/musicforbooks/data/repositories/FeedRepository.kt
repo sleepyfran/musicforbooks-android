@@ -6,6 +6,7 @@ import io.fgonzaleva.musicforbooks.data.cache.interfaces.FeedCache
 import io.fgonzaleva.musicforbooks.data.cache.model.FeedItemCache
 import io.fgonzaleva.musicforbooks.data.repositories.model.BookItem
 import io.fgonzaleva.musicforbooks.data.repositories.interfaces.FeedRepository
+import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import org.koin.standalone.KoinComponent
@@ -31,11 +32,9 @@ class FeedRepository : FeedRepository, KoinComponent {
         return musicForBooksService
             .getFeed()
             .subscribeOn(Schedulers.io())
-            .doOnSuccess { list ->
-                cache
-                    .invalidate(
-                        list.map { FeedItemCache.fromResponse(it) }
-                    )
+            .doOnSuccess {
+                Completable
+                    .fromAction(cache::invalidate)
                     .blockingAwait(5, TimeUnit.SECONDS)
             }
             .doOnSuccess { list ->
@@ -54,8 +53,9 @@ class FeedRepository : FeedRepository, KoinComponent {
         return getCachedFeed()
             .flatMap { list ->
                 val cachedItems = list.map { FeedItemCache.fromItem(it) }
+                val isCacheValid = cacheStrategy.isCacheValid(cachedItems)
 
-                if (cacheStrategy.isCacheValid(cachedItems)) {
+                if (isCacheValid) {
                     Single.just(list)
                 } else {
                     requestFeed()

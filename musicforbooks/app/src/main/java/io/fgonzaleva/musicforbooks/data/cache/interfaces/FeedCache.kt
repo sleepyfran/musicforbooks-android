@@ -18,7 +18,7 @@ interface FeedCache {
     @Insert
     fun insert(items: List<FeedItemCache>): Completable
 
-    @Delete
-    fun invalidate(items: List<FeedItemCache>): Completable
+    @Query("DELETE FROM FEEDCACHE")
+    fun invalidate()
 
 }
