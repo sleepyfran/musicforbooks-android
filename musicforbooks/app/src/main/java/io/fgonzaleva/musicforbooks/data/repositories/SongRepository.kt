@@ -26,11 +26,7 @@ class SongRepository(
                 spotifyTokenRepository
                     .getTokenOrGenerate()
                     .flatMap {  credentials ->
-                        val ids = if (response.spotifyIds.isNotEmpty()) {
-                            response.spotifyIds.reduce { acc, id -> "$acc,$id" }
-                        } else {
-                            ""
-                        }
+                        val ids = response.spotifyIds.reduce { acc, id -> "$acc,$id" }
 
                         spotifyService
                             .getTracks(

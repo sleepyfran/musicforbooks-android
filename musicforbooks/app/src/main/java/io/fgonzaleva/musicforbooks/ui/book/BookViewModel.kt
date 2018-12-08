@@ -6,6 +6,7 @@ import io.fgonzaleva.musicforbooks.data.repositories.interfaces.BookRepository
 import io.fgonzaleva.musicforbooks.data.repositories.interfaces.SongRepository
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import retrofit2.HttpException
 
 class BookViewModel(
     private val bookRepository: BookRepository,
@@ -43,7 +44,13 @@ class BookViewModel(
                     songData.value = SongResponse.Success(it)
                 },
                 {
-                    songData.value = SongResponse.Error(it)
+                    val httpError = it as? HttpException
+
+                    if (httpError?.code() == 404) {
+                        songData.value = SongResponse.Success(listOf())
+                    } else {
+                        songData.value = SongResponse.Error(it)
+                    }
                 }
             )
 
