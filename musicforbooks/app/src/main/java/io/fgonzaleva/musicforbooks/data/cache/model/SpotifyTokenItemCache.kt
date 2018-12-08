@@ -17,7 +17,7 @@ data class SpotifyTokenItemCache(
     companion object {
         fun fromResponse(response: TokenResponse): SpotifyTokenItemCache {
             return SpotifyTokenItemCache(
-                token = response.accessToken,
+                token = "Bearer ${response.accessToken}",
                 expirationTime = Instant().plus(response.expiresIn)
             )
         }

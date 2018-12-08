@@ -8,10 +8,10 @@ class HeaderProvider : KoinComponent {
 
     private val credentialsProvider: CredentialsProvider by inject()
 
-    fun generateSpotifyHeader(): String {
+    fun generateSpotifyAuthHeader(): String {
         val clientIds = "${credentialsProvider.spotifyClientId}:${credentialsProvider.spotifyClientSecret}"
         val encodedClients = String(Base64.encodeBase64(clientIds.toByteArray()))
-        return "Basic: $encodedClients"
+        return "Basic $encodedClients"
     }
 
 }

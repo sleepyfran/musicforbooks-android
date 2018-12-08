@@ -15,6 +15,8 @@ import io.fgonzaleva.musicforbooks.ui.book.BookViewModel
 import io.fgonzaleva.musicforbooks.ui.components.BookListAdapter
 import io.fgonzaleva.musicforbooks.ui.dashboard.DashboardViewModel
 import io.fgonzaleva.musicforbooks.ui.search.SearchViewModel
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.android.startKoin
 import org.koin.androidx.viewmodel.ext.koin.viewModel
 import org.koin.dsl.module.module
@@ -29,11 +31,24 @@ class App : Application() {
 
         val database = initializeDatabase()
 
+        // Initialize the OkHttpClient.
+        val okHttpClient = if (BuildConfig.DEBUG) {
+            val httpInterceptor = HttpLoggingInterceptor()
+            httpInterceptor.level = HttpLoggingInterceptor.Level.BODY
+
+            OkHttpClient
+                .Builder()
+                .addInterceptor(httpInterceptor)
+                .build()
+        } else {
+            OkHttpClient()
+        }
+
         // Initialize the Retrofit services.
-        val musicForBooksApi = initializeMusicForBooksService()
-        val goodReadsApi = initializeGoodReadsService()
-        val spotifyAuthApi = initializeSpotifyAuthService()
-        val spotifyApi = initializeSpotifyService()
+        val musicForBooksApi = initializeMusicForBooksService(okHttpClient)
+        val goodReadsApi = initializeGoodReadsService(okHttpClient)
+        val spotifyAuthApi = initializeSpotifyAuthService(okHttpClient)
+        val spotifyApi = initializeSpotifyService(okHttpClient)
 
         // Initialize dependency injection.
         val databaseModule = module {
@@ -58,7 +73,7 @@ class App : Application() {
         val viewModelsModule = module {
             viewModel { DashboardViewModel(get()) }
             viewModel { SearchViewModel(get()) }
-            viewModel { BookViewModel(get()) }
+            viewModel { BookViewModel(get(), get()) }
         }
 
         val adaptersModule = module {
@@ -84,16 +99,17 @@ class App : Application() {
         ).build()
     }
 
-    private fun initializeMusicForBooksService(): Retrofit {
+    private fun initializeMusicForBooksService(client: OkHttpClient): Retrofit {
         val musicForBooksBaseUrl = BuildConfig.BASE_API_URL
-        return Retrofit.Builder()
+        return Retrofit
+            .Builder()
             .baseUrl(musicForBooksBaseUrl)
             .addConverterFactory(GsonConverterFactory.create())
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .build()
     }
 
-    private fun initializeGoodReadsService(): Retrofit {
+    private fun initializeGoodReadsService(client: OkHttpClient): Retrofit {
         val goodReadsBaseUrl = BuildConfig.BASE_GOODREADS_URL
         val tikXml = TikXml
             .Builder()
@@ -108,22 +124,24 @@ class App : Application() {
             .build()
     }
 
-    private fun initializeSpotifyAuthService(): Retrofit {
+    private fun initializeSpotifyAuthService(client: OkHttpClient): Retrofit {
         val spotifyBaseUrl = BuildConfig.BASE_SPOTIFY_AUTH_URL
 
         return Retrofit
             .Builder()
+            .client(client)
             .baseUrl(spotifyBaseUrl)
             .addConverterFactory(GsonConverterFactory.create())
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .build()
     }
 
-    private fun initializeSpotifyService(): Retrofit {
+    private fun initializeSpotifyService(client: OkHttpClient): Retrofit {
         val spotifyBaseUrl = BuildConfig.BASE_SPOTIFY_URL
 
         return Retrofit
             .Builder()
+            .client(client)
             .baseUrl(spotifyBaseUrl)
             .addConverterFactory(GsonConverterFactory.create())
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())

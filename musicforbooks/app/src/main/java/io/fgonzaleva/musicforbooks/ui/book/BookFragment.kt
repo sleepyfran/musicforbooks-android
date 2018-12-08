@@ -50,7 +50,16 @@ class BookFragment : Fragment() {
             }
         })
 
+        viewModel.songData.observe(this, Observer { response ->
+            when (response) {
+                is SongResponse.Loading -> showLoading()
+                is SongResponse.Success -> println(response.songs)
+                is SongResponse.Error -> showError()
+            }
+        })
+
         viewModel.loadBook(bookId)
+        viewModel.loadSongs(bookId)
     }
 
     fun showLoading() {

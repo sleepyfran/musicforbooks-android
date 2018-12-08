@@ -2,7 +2,6 @@ package io.fgonzaleva.musicforbooks.data.repositories
 
 import io.fgonzaleva.musicforbooks.data.api.HeaderProvider
 import io.fgonzaleva.musicforbooks.data.api.interfaces.SpotifyAuthService
-import io.fgonzaleva.musicforbooks.data.api.model.spotify.TokenRequestBody
 import io.fgonzaleva.musicforbooks.data.cache.interfaces.SpotifyTokenCache
 import io.fgonzaleva.musicforbooks.data.cache.model.SpotifyTokenItemCache
 import io.fgonzaleva.musicforbooks.data.repositories.interfaces.SpotifyTokenRepository
@@ -28,10 +27,7 @@ class SpotifyTokenRepository : SpotifyTokenRepository, KoinComponent {
             .filter { it.expirationTime > Instant() }
             .switchIfEmpty(Single.defer {
                 spotifyAuthService
-                    .getToken(
-                        headerProvider.generateSpotifyHeader(),
-                        TokenRequestBody()
-                    )
+                    .getToken(headerProvider.generateSpotifyAuthHeader())
                     .map { response ->
                         SpotifyTokenItemCache.fromResponse(response)
                     }
