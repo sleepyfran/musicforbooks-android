@@ -12,25 +12,32 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import io.fgonzaleva.musicforbooks.R
 import io.fgonzaleva.musicforbooks.data.repositories.model.Book
-import io.fgonzaleva.musicforbooks.data.repositories.model.BookItem
+import io.fgonzaleva.musicforbooks.data.repositories.model.Song
+import io.fgonzaleva.musicforbooks.ui.components.SongListAdapter
 import kotlinx.android.synthetic.main.fragment_book.*
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.koin.standalone.KoinComponent
 
 class BookFragment : Fragment() {
 
     companion object {
-        fun create(bookId: Int, onBookLoaded: (book: BookItem) -> Unit) =
+        fun create(
+            bookId: Int,
+            onBookLoaded: (book: Book) -> Unit,
+            onEmptyResults: () -> Unit
+        ) =
             BookFragment().apply {
                 this.bookId = bookId
                 this.onBookLoaded = onBookLoaded
+                this.onEmptyResults = onEmptyResults
             }
     }
 
     private val viewModel by viewModel<BookViewModel>()
+    private val adapter: SongListAdapter by inject()
     private var bookId: Int = 0
-    private lateinit var onBookLoaded: (book: BookItem) -> Unit
+    private lateinit var onBookLoaded: (book: Book) -> Unit
+    private lateinit var onEmptyResults: () -> Unit
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,18 +49,33 @@ class BookFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        songs.adapter = adapter
+        songs.layoutManager = LinearLayoutManager(context)
+        adapter.onSongClick = { song ->
+            // Handle the song click
+        }
+
+        onlyInstrumental.setOnCheckedChangeListener { _, isOnlyInstrumentalsChecked ->
+            if (isOnlyInstrumentalsChecked) {
+                adapter.applyFilter { it.isInstrumental }
+            } else {
+                adapter.unapplyFilter()
+            }
+        }
+
         viewModel.bookData.observe(this, Observer { response ->
             when (response) {
-                is BookResponse.Loading -> showLoading()
-                is BookResponse.Success -> showBook(response.book)
+                is BookResponse.Loading -> showGeneralLoading()
+                is BookResponse.Success -> handleBook(response.book)
                 is BookResponse.Error -> showError()
             }
         })
 
         viewModel.songData.observe(this, Observer { response ->
             when (response) {
-                is SongResponse.Loading -> showLoading()
-                is SongResponse.Success -> println(response.songs)
+                is SongResponse.Loading -> showSongLoading()
+                is SongResponse.Success -> showSongs(response.songs)
+                is SongResponse.NoResults -> showNoSongs()
                 is SongResponse.Error -> showError()
             }
         })
@@ -62,18 +84,32 @@ class BookFragment : Fragment() {
         viewModel.loadSongs(bookId)
     }
 
-    fun showLoading() {
-        hideContent()
+    private fun showGeneralLoading() {
+        hideGeneralContent()
         hideError()
         loading.visibility = View.VISIBLE
     }
 
-    fun hideLoading() {
+    private fun hideGeneralLoading() {
         loading.visibility = View.GONE
     }
 
-    fun showBook(book: Book) {
-        hideLoading()
+    private fun showSongLoading() {
+        hideSongsContent()
+        songsLoading.visibility = View.VISIBLE
+    }
+
+    private fun hideSongLoading() {
+        songsLoading.visibility = View.GONE
+    }
+
+    private fun handleBook(book: Book) {
+        onBookLoaded(book)
+        showBook(book)
+    }
+
+    private fun showBook(book: Book) {
+        hideGeneralLoading()
         hideError()
 
         bookTitle.text = book.title
@@ -90,24 +126,50 @@ class BookFragment : Fragment() {
             .load(book.coverUrl)
             .into(bookCover)
 
-        showContent()
+        showGeneralContent()
     }
 
-    fun showContent() {
+    private fun showSongs(songs: List<Song>) {
+        showSongsContent()
+        adapter.updateContent(songs.toMutableList())
+    }
+
+    private fun showGeneralContent() {
         content.visibility = View.VISIBLE
     }
 
-    fun hideContent() {
+    private fun hideGeneralContent() {
         content.visibility = View.GONE
     }
 
-    fun showError() {
-        hideLoading()
-        hideContent()
+    private fun showSongsContent() {
+        hideNoSongs()
+        hideSongLoading()
+        songsContent.visibility = View.VISIBLE
+    }
+
+    private fun hideSongsContent() {
+        songsContent.visibility = View.GONE
+    }
+
+    private fun showNoSongs() {
+        hideSongLoading()
+        hideSongsContent()
+        onEmptyResults()
+        emptyContent.visibility = View.VISIBLE
+    }
+
+    private fun hideNoSongs() {
+        emptyContent.visibility = View.GONE
+    }
+
+    private fun showError() {
+        hideGeneralLoading()
+        hideGeneralContent()
         error.visibility = View.VISIBLE
     }
 
-    fun hideError() {
+    private fun hideError() {
         error.visibility = View.GONE
     }
 }

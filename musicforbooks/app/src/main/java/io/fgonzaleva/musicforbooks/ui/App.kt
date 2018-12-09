@@ -13,6 +13,7 @@ import io.fgonzaleva.musicforbooks.data.cache.CacheProviders
 import io.fgonzaleva.musicforbooks.data.repositories.RepositoryProviders
 import io.fgonzaleva.musicforbooks.ui.book.BookViewModel
 import io.fgonzaleva.musicforbooks.ui.components.BookListAdapter
+import io.fgonzaleva.musicforbooks.ui.components.SongListAdapter
 import io.fgonzaleva.musicforbooks.ui.dashboard.DashboardViewModel
 import io.fgonzaleva.musicforbooks.ui.search.SearchViewModel
 import okhttp3.OkHttpClient
@@ -78,6 +79,7 @@ class App : Application() {
 
         val adaptersModule = module {
             factory { BookListAdapter() }
+            factory { SongListAdapter() }
         }
 
         startKoin(applicationContext, listOf(

@@ -6,6 +6,8 @@ sealed class SongResponse {
 
     object Loading : SongResponse()
 
+    object NoResults : SongResponse()
+
     data class Success(
         val songs: List<Song>
     ): SongResponse()

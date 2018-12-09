@@ -20,4 +20,9 @@
     </string-array>
 
     <string name="book_see_on_goodreads">Open on GoodReads</string>
+
+    <string name="song_number_placeholder">1</string>
+    <string name="song_name_placeholder">God\'s Teeth</string>
+    <string name="song_artist_name_placeholder">This Will Destroy You</string>
+    <string name="song_no_results">Seems like we don\'t have any songs for this book yet. Add your own!</string>
 </resources>

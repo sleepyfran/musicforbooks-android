@@ -47,7 +47,7 @@ class BookViewModel(
                     val httpError = it as? HttpException
 
                     if (httpError?.code() == 404) {
-                        songData.value = SongResponse.Success(listOf())
+                        songData.value = SongResponse.NoResults
                     } else {
                         songData.value = SongResponse.Error(it)
                     }

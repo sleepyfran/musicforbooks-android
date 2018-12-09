@@ -9,14 +9,14 @@ import io.fgonzaleva.musicforbooks.R
 import io.fgonzaleva.musicforbooks.data.repositories.model.BookItem
 import kotlinx.android.synthetic.main.item_book_card.view.*
 
-class BookListAdapter() : RecyclerView.Adapter<BookListAdapter.ViewHolder>() {
+class BookListAdapter : RecyclerView.Adapter<BookListAdapter.ViewHolder>() {
 
-    private val bookList: MutableList<BookItem> = mutableListOf()
+    private val books: MutableList<BookItem> = mutableListOf()
     lateinit var onBookClick: (BookItem) -> Unit
 
     fun updateContent(content: MutableList<BookItem>) {
-        bookList.clear()
-        bookList.addAll(content)
+        books.clear()
+        books.addAll(content)
         notifyDataSetChanged()
     }
 
@@ -27,7 +27,7 @@ class BookListAdapter() : RecyclerView.Adapter<BookListAdapter.ViewHolder>() {
         val holder = ViewHolder(view)
 
         holder.itemView.setOnClickListener {
-            val selectedItem = bookList[holder.adapterPosition]
+            val selectedItem = books[holder.adapterPosition]
             onBookClick(selectedItem)
         }
 
@@ -35,11 +35,11 @@ class BookListAdapter() : RecyclerView.Adapter<BookListAdapter.ViewHolder>() {
     }
 
     override fun getItemCount(): Int {
-        return bookList.size
+        return books.size
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(bookList[position])
+        holder.bind(books[position])
     }
 
     class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
