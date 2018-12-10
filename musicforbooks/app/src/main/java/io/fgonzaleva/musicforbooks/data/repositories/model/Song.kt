@@ -1,7 +1,7 @@
 package io.fgonzaleva.musicforbooks.data.repositories.model
 
+import io.fgonzaleva.musicforbooks.data.api.model.spotify.Track
 import io.fgonzaleva.musicforbooks.data.api.model.spotify.TrackFeaturesResponse
-import io.fgonzaleva.musicforbooks.data.api.model.spotify.TrackResponse
 
 data class Song(
     val title: String,
@@ -11,7 +11,7 @@ data class Song(
 ) {
 
     companion object {
-        fun fromTrackResponses(track: TrackResponse.Track, features: TrackFeaturesResponse.TrackFeatures): Song {
+        fun fromTrackResponses(track: Track, features: TrackFeaturesResponse.TrackFeatures): Song {
             return Song(
                 track.title,
                 track.artists.first().name,

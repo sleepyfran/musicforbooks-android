@@ -3,12 +3,14 @@ package io.fgonzaleva.musicforbooks.ui.book
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
+import android.view.Menu
+import android.view.MenuItem
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.transaction
 import io.fgonzaleva.musicforbooks.R
 import io.fgonzaleva.musicforbooks.data.repositories.model.Book
+import io.fgonzaleva.musicforbooks.ui.addsong.AddSongActivity
 
 import kotlinx.android.synthetic.main.activity_book.*
 
@@ -62,6 +64,20 @@ class BookActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_book, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
+        R.id.action_add_new_song -> {
+            val searchIntent = Intent(this, AddSongActivity::class.java)
+            startActivity(searchIntent)
+            true
+        }
+        else -> super.onOptionsItemSelected(item)
     }
 
 }

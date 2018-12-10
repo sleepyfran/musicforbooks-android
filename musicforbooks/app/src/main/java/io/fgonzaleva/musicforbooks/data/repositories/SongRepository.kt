@@ -2,6 +2,7 @@ package io.fgonzaleva.musicforbooks.data.repositories
 
 import io.fgonzaleva.musicforbooks.data.api.interfaces.MusicForBooksService
 import io.fgonzaleva.musicforbooks.data.api.interfaces.SpotifyService
+import io.fgonzaleva.musicforbooks.data.api.model.spotify.Track
 import io.fgonzaleva.musicforbooks.data.api.model.spotify.TrackResponse
 import io.fgonzaleva.musicforbooks.data.api.model.spotify.TrackFeaturesResponse
 import io.fgonzaleva.musicforbooks.data.repositories.interfaces.SongRepository
@@ -45,7 +46,7 @@ class SongRepository(
                                             .zipWith(
                                                 Observable.fromIterable(featuresResponse.features),
                                                 BiFunction {
-                                                        track: TrackResponse.Track,
+                                                        track: Track,
                                                         features: TrackFeaturesResponse.TrackFeatures ->
 
                                                     Song.fromTrackResponses(track, features)
