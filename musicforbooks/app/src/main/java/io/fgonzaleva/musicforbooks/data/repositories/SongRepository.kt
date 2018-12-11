@@ -3,7 +3,6 @@ package io.fgonzaleva.musicforbooks.data.repositories
 import io.fgonzaleva.musicforbooks.data.api.interfaces.MusicForBooksService
 import io.fgonzaleva.musicforbooks.data.api.interfaces.SpotifyService
 import io.fgonzaleva.musicforbooks.data.api.model.spotify.Track
-import io.fgonzaleva.musicforbooks.data.api.model.spotify.TrackResponse
 import io.fgonzaleva.musicforbooks.data.api.model.spotify.TrackFeaturesResponse
 import io.fgonzaleva.musicforbooks.data.repositories.interfaces.SongRepository
 import io.fgonzaleva.musicforbooks.data.repositories.interfaces.SpotifyTokenRepository
@@ -23,41 +22,43 @@ class SongRepository(
         return musicForBooksService
             .getBookSongs(bookId)
             .subscribeOn(Schedulers.io())
-            .flatMap {  response ->
+            .flatMap { response ->
+                val ids = response.spotifyIds.reduce { acc, id -> "$acc,$id" }
+                Single.just(ids)
+            }
+            .flatMap { ids ->
                 spotifyTokenRepository
                     .getTokenOrGenerate()
-                    .flatMap {  credentials ->
-                        val ids = response.spotifyIds.reduce { acc, id -> "$acc,$id" }
-
+                    .map { Pair(ids, it) }
+            }
+            .flatMap { (ids, credentials) ->
+                spotifyService
+                    .getTracks(
+                        credentials.token,
+                        ids
+                    )
+                    .flatMap { trackResponse ->
                         spotifyService
-                            .getTracks(
+                            .getTracksFeatures(
                                 credentials.token,
                                 ids
                             )
-                            .flatMap { trackResponse ->
-                                spotifyService
-                                    .getTracksFeatures(
-                                        credentials.token,
-                                        ids
+                            .flatMap { featuresResponse ->
+                                Observable
+                                    .fromIterable(trackResponse.tracks)
+                                    .zipWith(
+                                        Observable.fromIterable(featuresResponse.features),
+                                        BiFunction {
+                                                track: Track,
+                                                features: TrackFeaturesResponse.TrackFeatures ->
+
+                                            Song.fromTrackResponses(track, features)
+                                        }
                                     )
-                                    .flatMap { featuresResponse ->
-                                        Observable
-                                            .fromIterable(trackResponse.tracks)
-                                            .zipWith(
-                                                Observable.fromIterable(featuresResponse.features),
-                                                BiFunction {
-                                                        track: Track,
-                                                        features: TrackFeaturesResponse.TrackFeatures ->
-
-                                                    Song.fromTrackResponses(track, features)
-                                                }
-                                            )
-                                    }
                             }
-                            .toList()
                     }
+                    .toList()
             }
-
     }
 
 }
