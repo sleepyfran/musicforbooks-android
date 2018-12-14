@@ -26,5 +26,7 @@
     <string name="song_name_placeholder">God\'s Teeth</string>
     <string name="song_artist_name_placeholder">This Will Destroy You</string>
     <string name="song_no_results">Seems like we don\'t have any songs for this book yet. Add your own!</string>
+    <string name="song_search_no_results">No results. Try with a different query!</string>
+    <string name="song_search_start">Don\'t be shy, search for something!</string>
     <string name="song_add">Add new song</string>
 </resources>

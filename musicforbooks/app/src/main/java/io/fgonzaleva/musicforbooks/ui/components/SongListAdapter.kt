@@ -13,6 +13,7 @@ class SongListAdapter : RecyclerView.Adapter<SongListAdapter.ViewHolder>() {
     private val songs: MutableList<Song> = mutableListOf()
     private var unfilteredSongs: List<Song> = listOf()
     lateinit var onSongClick: (Song) -> Unit
+    var shouldShowScore = true
 
     fun updateContent(content: MutableList<Song>) {
         songs.clear()
@@ -50,11 +51,11 @@ class SongListAdapter : RecyclerView.Adapter<SongListAdapter.ViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(songs[position], position)
+        holder.bind(songs[position], position, shouldShowScore)
     }
 
     class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
-        fun bind(song: Song, index: Int) {
+        fun bind(song: Song, index: Int, shouldShowScore: Boolean) {
             view.number.text = (index + 1).toString()
 
             when (song.score) {
@@ -66,6 +67,10 @@ class SongListAdapter : RecyclerView.Adapter<SongListAdapter.ViewHolder>() {
             view.songName.text = song.title
             view.artistName.text = song.artist
             view.instrumental.visibility = if (song.isInstrumental) View.VISIBLE else View.INVISIBLE
+
+            if (!shouldShowScore) {
+                view.score.visibility = View.GONE
+            }
         }
     }
 

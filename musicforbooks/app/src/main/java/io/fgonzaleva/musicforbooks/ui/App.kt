@@ -11,6 +11,7 @@ import io.fgonzaleva.musicforbooks.data.api.HeaderProvider
 import io.fgonzaleva.musicforbooks.data.cache.AppDatabase
 import io.fgonzaleva.musicforbooks.data.cache.CacheProviders
 import io.fgonzaleva.musicforbooks.data.repositories.RepositoryProviders
+import io.fgonzaleva.musicforbooks.ui.addsong.AddSongViewModel
 import io.fgonzaleva.musicforbooks.ui.book.BookViewModel
 import io.fgonzaleva.musicforbooks.ui.components.BookListAdapter
 import io.fgonzaleva.musicforbooks.ui.components.SongListAdapter
@@ -75,6 +76,7 @@ class App : Application() {
             viewModel { DashboardViewModel(get()) }
             viewModel { SearchViewModel(get()) }
             viewModel { BookViewModel(get(), get()) }
+            viewModel { AddSongViewModel(get()) }
         }
 
         val adaptersModule = module {

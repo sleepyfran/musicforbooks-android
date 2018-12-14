@@ -4,10 +4,10 @@ import com.google.gson.annotations.SerializedName
 
 data class TrackSearchResponse(
     @SerializedName("tracks")
-    val tracks: List<Track>
+    val tracks: Tracks
 ) {
 
-    data class Items(
+    data class Tracks(
         @SerializedName("items")
         val items: List<Track>
     )

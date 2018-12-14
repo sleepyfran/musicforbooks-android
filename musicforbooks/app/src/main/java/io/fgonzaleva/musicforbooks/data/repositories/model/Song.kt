@@ -11,12 +11,21 @@ data class Song(
 ) {
 
     companion object {
-        fun fromTrackResponses(track: Track, features: TrackFeaturesResponse.TrackFeatures): Song {
+        fun fromTrackResponse(track: Track, features: TrackFeaturesResponse.TrackFeatures): Song {
             return Song(
                 track.title,
                 track.artists.first().name,
                 features.instrumentalness > 0.5,
                 100
+            )
+        }
+
+        fun fromTrackResponse(track: Track): Song {
+            return Song(
+                track.title,
+                track.artists.first().name,
+                false,
+                0
             )
         }
     }

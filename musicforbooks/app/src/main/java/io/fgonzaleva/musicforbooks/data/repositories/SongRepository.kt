@@ -29,18 +29,18 @@ class SongRepository(
             .flatMap { ids ->
                 spotifyTokenRepository
                     .getTokenOrGenerate()
-                    .map { Pair(ids, it) }
+                    .map { Pair(ids, it.token) }
             }
-            .flatMap { (ids, credentials) ->
+            .flatMap { (ids, token) ->
                 spotifyService
                     .getTracks(
-                        credentials.token,
+                        token,
                         ids
                     )
                     .flatMap { trackResponse ->
                         spotifyService
                             .getTracksFeatures(
-                                credentials.token,
+                                token,
                                 ids
                             )
                             .flatMap { featuresResponse ->
@@ -52,9 +52,34 @@ class SongRepository(
                                                 track: Track,
                                                 features: TrackFeaturesResponse.TrackFeatures ->
 
-                                            Song.fromTrackResponses(track, features)
+                                            Song.fromTrackResponse(track, features)
                                         }
                                     )
+                            }
+                    }
+                    .toList()
+            }
+    }
+
+    override fun searchSongs(query: String): Single<List<Song>> {
+        return spotifyTokenRepository
+            .getTokenOrGenerate()
+            .subscribeOn(Schedulers.io())
+            .map { response ->
+                response.token
+            }
+            .flatMap {  token ->
+                spotifyService
+                    .search(
+                        token,
+                        query,
+                        limit = 50
+                    )
+                    .flatMap { response ->
+                        Observable
+                            .fromIterable(response.tracks.items)
+                            .map { track ->
+                                Song.fromTrackResponse(track)
                             }
                     }
                     .toList()

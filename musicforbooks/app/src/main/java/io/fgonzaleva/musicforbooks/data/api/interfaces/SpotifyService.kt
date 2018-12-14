@@ -26,7 +26,8 @@ interface SpotifyService {
     fun search(
         @Header("Authorization") authorizationHeader: String,
         @Query("q") query: String,
-        @Query("type") type: String = "track"
+        @Query("type") type: String = "track",
+        @Query("limit") limit: Int = 20
     ): Observable<TrackSearchResponse>
 
 }
