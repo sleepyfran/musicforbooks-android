@@ -1,7 +1,8 @@
 package io.fgonzaleva.musicforbooks.data.api.interfaces
 
-import io.fgonzaleva.musicforbooks.data.api.model.spotify.TrackResponse
+import io.fgonzaleva.musicforbooks.data.api.model.spotify.TracksResponse
 import io.fgonzaleva.musicforbooks.data.api.model.spotify.TrackFeaturesResponse
+import io.fgonzaleva.musicforbooks.data.api.model.spotify.TrackResponse
 import io.fgonzaleva.musicforbooks.data.api.model.spotify.TrackSearchResponse
 import io.reactivex.Observable
 import retrofit2.http.GET
@@ -14,7 +15,7 @@ interface SpotifyService {
     fun getTracks(
         @Header("Authorization") authorizationHeader: String,
         @Query("ids") ids: String
-    ): Observable<TrackResponse>
+    ): Observable<TracksResponse>
 
     @GET("audio-features")
     fun getTracksFeatures(

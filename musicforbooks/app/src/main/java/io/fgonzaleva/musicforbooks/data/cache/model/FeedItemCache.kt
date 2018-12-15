@@ -3,7 +3,7 @@ package io.fgonzaleva.musicforbooks.data.cache.model
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import io.fgonzaleva.musicforbooks.data.api.model.FeedItemResponse
+import io.fgonzaleva.musicforbooks.data.api.model.musicforbooks.FeedItemResponse
 import io.fgonzaleva.musicforbooks.data.repositories.model.BookItem
 import java.util.*
 

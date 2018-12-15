@@ -2,7 +2,8 @@ package io.fgonzaleva.musicforbooks.data.repositories
 
 import io.fgonzaleva.musicforbooks.data.api.interfaces.MusicForBooksService
 import io.fgonzaleva.musicforbooks.data.api.interfaces.SpotifyService
-import io.fgonzaleva.musicforbooks.data.api.model.spotify.Track
+import io.fgonzaleva.musicforbooks.data.api.model.musicforbooks.BookRequest
+import io.fgonzaleva.musicforbooks.data.api.model.spotify.TrackResponse
 import io.fgonzaleva.musicforbooks.data.api.model.spotify.TrackFeaturesResponse
 import io.fgonzaleva.musicforbooks.data.repositories.interfaces.SongRepository
 import io.fgonzaleva.musicforbooks.data.repositories.interfaces.SpotifyTokenRepository
@@ -23,8 +24,7 @@ class SongRepository(
             .getBookSongs(bookId)
             .subscribeOn(Schedulers.io())
             .flatMap { response ->
-                val ids = response.spotifyIds.reduce { acc, id -> "$acc,$id" }
-                Single.just(ids)
+                Single.just(idsFromList(response.spotifyIds))
             }
             .flatMap { ids ->
                 spotifyTokenRepository
@@ -32,32 +32,7 @@ class SongRepository(
                     .map { Pair(ids, it.token) }
             }
             .flatMap { (ids, token) ->
-                spotifyService
-                    .getTracks(
-                        token,
-                        ids
-                    )
-                    .flatMap { trackResponse ->
-                        spotifyService
-                            .getTracksFeatures(
-                                token,
-                                ids
-                            )
-                            .flatMap { featuresResponse ->
-                                Observable
-                                    .fromIterable(trackResponse.tracks)
-                                    .zipWith(
-                                        Observable.fromIterable(featuresResponse.features),
-                                        BiFunction {
-                                                track: Track,
-                                                features: TrackFeaturesResponse.TrackFeatures ->
-
-                                            Song.fromTrackResponse(track, features)
-                                        }
-                                    )
-                            }
-                    }
-                    .toList()
+                getSpotifyTracks(ids, token)
             }
     }
 
@@ -86,4 +61,53 @@ class SongRepository(
             }
     }
 
+    override fun updateBookWithSong(bookId: Int, song: Song): Single<List<Song>> {
+        return musicForBooksService
+            .updateBook(BookRequest(bookId, listOf(song.id)))
+            .subscribeOn(Schedulers.io())
+            .flatMap { response ->
+                Single.just(idsFromList(response.spotifyIds))
+            }
+            .flatMap { ids ->
+                spotifyTokenRepository
+                    .getTokenOrGenerate()
+                    .map { Pair(ids, it.token) }
+            }
+            .flatMap { (ids, token) ->
+                getSpotifyTracks(ids, token)
+            }
+    }
+
+    private fun getSpotifyTracks(ids: String, token: String): Single<List<Song>> {
+        return spotifyService
+            .getTracks(
+                token,
+                ids
+            )
+            .flatMap { trackResponse ->
+                spotifyService
+                    .getTracksFeatures(
+                        token,
+                        ids
+                    )
+                    .flatMap { featuresResponse ->
+                        Observable
+                            .fromIterable(trackResponse.tracks)
+                            .zipWith(
+                                Observable.fromIterable(featuresResponse.features),
+                                BiFunction {
+                                        track: TrackResponse,
+                                        features: TrackFeaturesResponse.TrackFeatures ->
+
+                                    Song.fromTrackResponse(track, features)
+                                }
+                            )
+                    }
+            }
+            .toList()
+    }
+
+    private fun idsFromList(ids: List<String>): String {
+        return ids.reduce { acc, id -> "$acc,$id" }
+    }
 }

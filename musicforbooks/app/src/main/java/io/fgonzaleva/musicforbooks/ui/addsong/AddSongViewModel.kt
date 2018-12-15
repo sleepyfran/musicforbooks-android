@@ -12,19 +12,19 @@ class AddSongViewModel(
 ) : ViewModel() {
 
     private val disposables = CompositeDisposable()
-    val searchData = MutableLiveData<AddSongResponse>()
+    val addSongData = MutableLiveData<AddSongResponse>()
 
     fun searchResultsFor(query: String) {
         val searchDisposable = songRepository
             .searchSongs(query)
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnSubscribe { searchData.value = AddSongResponse.Loading }
+            .doOnSubscribe { addSongData.value = AddSongResponse.Loading }
             .subscribe(
                 { results ->
-                    searchData.value = AddSongResponse.Success(results)
+                    addSongData.value = AddSongResponse.Results(results)
                 },
                 { error ->
-                    searchData.value = AddSongResponse.Error(error)
+                    addSongData.value = AddSongResponse.Error(error)
                 }
             )
 
@@ -32,7 +32,19 @@ class AddSongViewModel(
     }
 
     fun addSongToBook(bookId: Int, song: Song) {
-        // TODO: Do something here
+        val updateDisposable = songRepository
+            .updateBookWithSong(bookId, song)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                { updatedSongs ->
+                    addSongData.value = AddSongResponse.Success(updatedSongs)
+                },
+                { error ->
+                    addSongData.value = AddSongResponse.Error(error)
+                }
+            )
+
+        disposables.add(updateDisposable)
     }
 
 }

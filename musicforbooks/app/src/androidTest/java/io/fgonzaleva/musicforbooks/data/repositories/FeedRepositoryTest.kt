@@ -2,7 +2,7 @@ package io.fgonzaleva.musicforbooks.data.repositories
 
 import io.fgonzaleva.musicforbooks.BaseTest
 import io.fgonzaleva.musicforbooks.data.api.interfaces.MusicForBooksService
-import io.fgonzaleva.musicforbooks.data.api.model.FeedItemResponse
+import io.fgonzaleva.musicforbooks.data.api.model.musicforbooks.FeedItemResponse
 import io.fgonzaleva.musicforbooks.data.cache.interfaces.CacheStrategy
 import io.fgonzaleva.musicforbooks.data.repositories.interfaces.FeedRepository
 import io.fgonzaleva.musicforbooks.data.repositories.model.BookItem
@@ -12,7 +12,6 @@ import org.junit.Before
 import org.junit.Test
 import org.koin.standalone.inject
 import org.koin.test.KoinTest
-import org.koin.test.declare
 import org.koin.test.declareMock
 import org.mockito.ArgumentMatchers.anyList
 import org.mockito.Mockito

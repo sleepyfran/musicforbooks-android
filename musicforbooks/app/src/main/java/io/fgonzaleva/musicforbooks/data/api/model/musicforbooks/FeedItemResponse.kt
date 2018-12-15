@@ -1,4 +1,4 @@
-package io.fgonzaleva.musicforbooks.data.api.model
+package io.fgonzaleva.musicforbooks.data.api.model.musicforbooks
 
 import com.google.gson.annotations.SerializedName
 

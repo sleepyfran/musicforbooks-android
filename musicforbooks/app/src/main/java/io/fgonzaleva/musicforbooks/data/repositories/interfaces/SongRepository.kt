@@ -6,4 +6,5 @@ import io.reactivex.Single
 interface SongRepository {
     fun getSongsForBook(bookId: Int): Single<List<Song>>
     fun searchSongs(query: String): Single<List<Song>>
+    fun updateBookWithSong(bookId: Int, song: Song): Single<List<Song>>
 }

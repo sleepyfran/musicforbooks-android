@@ -84,6 +84,10 @@ class BookFragment : Fragment() {
         viewModel.loadSongs(bookId)
     }
 
+    fun refreshContent() {
+        viewModel.loadSongs(bookId)
+    }
+
     private fun showGeneralLoading() {
         hideGeneralContent()
         hideError()

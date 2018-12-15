@@ -1,6 +1,6 @@
 package io.fgonzaleva.musicforbooks.data.repositories.model
 
-import io.fgonzaleva.musicforbooks.data.api.model.FeedItemResponse
+import io.fgonzaleva.musicforbooks.data.api.model.musicforbooks.FeedItemResponse
 import io.fgonzaleva.musicforbooks.data.api.model.goodreads.BookResultResponse
 import io.fgonzaleva.musicforbooks.data.cache.model.FeedItemCache
 

@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import io.fgonzaleva.musicforbooks.R
@@ -17,14 +18,19 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class AddSongFragment : Fragment() {
 
     companion object {
-        fun create(bookId: Int) = AddSongFragment().apply {
+        fun create(
+            bookId: Int,
+            onSongsUpdate: (songs: List<Song>) -> Unit
+        ) = AddSongFragment().apply {
             this.bookId = bookId
+            this.onSongsUpdate = onSongsUpdate
         }
     }
 
     private val viewModel by viewModel<AddSongViewModel>()
     private val adapter: SongListAdapter by inject()
     private var bookId: Int = 0
+    private lateinit var onSongsUpdate: (songs: List<Song>) -> Unit
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,18 +43,17 @@ class AddSongFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         adapter.shouldShowScore = false
-        adapter.onSongClick = { song ->
-            viewModel.addSongToBook(bookId, song)
-        }
+        adapter.onSongClick = { song -> showConfirmationDialog(song) }
 
         results.adapter = adapter
         results.layoutManager = LinearLayoutManager(context)
 
-        viewModel.searchData.observe(this, Observer { response: AddSongResponse ->
+        viewModel.addSongData.observe(this, Observer { response: AddSongResponse ->
             when (response) {
                 is AddSongResponse.Loading -> showLoading()
                 is AddSongResponse.NoResults -> showNoResults()
-                is AddSongResponse.Success -> showContent(response.songs)
+                is AddSongResponse.Results -> showContent(response.songs)
+                is AddSongResponse.Success -> onSongsUpdate(response.songs)
                 is AddSongResponse.Error -> showError()
             }
         })
@@ -58,6 +63,19 @@ class AddSongFragment : Fragment() {
 
     fun searchResultsFor(query: String) {
         viewModel.searchResultsFor(query)
+    }
+
+    private fun showConfirmationDialog(song: Song) {
+        val dialogMessage = getString(R.string.song_add_confirmation_message, song.title)
+
+        AlertDialog
+            .Builder(context!!)
+            .setTitle(R.string.song_add_confirmation_title)
+            .setMessage(dialogMessage)
+            .setPositiveButton(android.R.string.yes) { _, _ -> viewModel.addSongToBook(bookId, song) }
+            .setNegativeButton(android.R.string.no) { dialog, _ -> dialog.dismiss() }
+            .create()
+            .show()
     }
 
     private fun showStartMessage() {

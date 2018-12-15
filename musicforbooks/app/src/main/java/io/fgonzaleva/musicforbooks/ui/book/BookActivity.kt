@@ -1,5 +1,6 @@
 package io.fgonzaleva.musicforbooks.ui.book
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -7,6 +8,7 @@ import android.view.Menu
 import android.view.MenuItem
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.transaction
 import io.fgonzaleva.musicforbooks.R
 import io.fgonzaleva.musicforbooks.data.repositories.model.Book
@@ -28,6 +30,9 @@ class BookActivity : AppCompatActivity() {
         }
     }
 
+    private var bookId: Int = 0
+    private lateinit var fragment: BookFragment
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_book)
@@ -38,7 +43,7 @@ class BookActivity : AppCompatActivity() {
                 .setAction("Action", null).show()
         }
 
-        val bookId = intent.extras?.getInt(BOOK_ID_EXTRA)
+        bookId = intent.extras?.getInt(BOOK_ID_EXTRA)
                      ?: throw IllegalArgumentException("A book_id_extra is required for the activity to work")
         val bookTitle = intent.extras?.getString(BOOK_TITLE_EXTRA)
                         ?: throw IllegalArgumentException("A book_title_extra is required for the activity to work")
@@ -55,7 +60,7 @@ class BookActivity : AppCompatActivity() {
             fab.hide()
         }
 
-        val fragment = BookFragment.create(bookId, onBookLoaded, onEmptyResults)
+        fragment = BookFragment.create(bookId, onBookLoaded, onEmptyResults)
         supportFragmentManager.transaction {
             replace(R.id.fragment, fragment)
         }
@@ -74,10 +79,19 @@ class BookActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         R.id.action_add_new_song -> {
             val searchIntent = Intent(this, AddSongActivity::class.java)
-            startActivity(searchIntent)
+            searchIntent.putExtra(AddSongActivity.BOOK_ID_EXTRA, bookId)
+            startActivityForResult(searchIntent, AddSongActivity.SONGS_UPDATED)
             true
         }
         else -> super.onOptionsItemSelected(item)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == AddSongActivity.SONGS_UPDATED && resultCode == Activity.RESULT_OK) {
+            fragment.refreshContent()
+        }
     }
 
 }

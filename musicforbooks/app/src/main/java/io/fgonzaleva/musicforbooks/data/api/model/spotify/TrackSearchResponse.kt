@@ -9,7 +9,7 @@ data class TrackSearchResponse(
 
     data class Tracks(
         @SerializedName("items")
-        val items: List<Track>
+        val items: List<TrackResponse>
     )
 
 }

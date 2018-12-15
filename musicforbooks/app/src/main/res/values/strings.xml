@@ -29,4 +29,6 @@
     <string name="song_search_no_results">No results. Try with a different query!</string>
     <string name="song_search_start">Don\'t be shy, search for something!</string>
     <string name="song_add">Add new song</string>
+    <string name="song_add_confirmation_title">Add song</string>
+    <string name="song_add_confirmation_message">Are you sure you want to add %1$s to this book?</string>
 </resources>

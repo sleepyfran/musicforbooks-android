@@ -8,6 +8,10 @@ sealed class AddSongResponse {
 
     object NoResults : AddSongResponse()
 
+    data class Results(
+        val songs: List<Song>
+    ): AddSongResponse()
+
     data class Success(
         val songs: List<Song>
     ): AddSongResponse()
