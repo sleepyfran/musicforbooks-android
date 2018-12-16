@@ -1,6 +1,5 @@
 package io.fgonzaleva.musicforbooks.data.api.interfaces
 
-import io.fgonzaleva.musicforbooks.data.api.model.musicforbooks.BookRequest
 import io.fgonzaleva.musicforbooks.data.api.model.musicforbooks.BookResponse
 import io.fgonzaleva.musicforbooks.data.api.model.musicforbooks.FeedItemResponse
 import io.reactivex.Single
@@ -17,7 +16,7 @@ interface MusicForBooksService {
     @GET("books/{id}")
     fun getBookSongs(@Path("id") bookId: Int): Single<BookResponse>
 
-    @POST("books/")
-    fun updateBook(@Body book: BookRequest): Single<BookResponse>
+    @POST("books/{id}")
+    fun updateBook(@Path("id") bookId: Int, @Body songs: List<String>): Single<BookResponse>
 
 }

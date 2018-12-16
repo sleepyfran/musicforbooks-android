@@ -2,7 +2,6 @@ package io.fgonzaleva.musicforbooks.data.repositories
 
 import io.fgonzaleva.musicforbooks.data.api.interfaces.MusicForBooksService
 import io.fgonzaleva.musicforbooks.data.api.interfaces.SpotifyService
-import io.fgonzaleva.musicforbooks.data.api.model.musicforbooks.BookRequest
 import io.fgonzaleva.musicforbooks.data.api.model.spotify.TrackResponse
 import io.fgonzaleva.musicforbooks.data.api.model.spotify.TrackFeaturesResponse
 import io.fgonzaleva.musicforbooks.data.repositories.interfaces.SongRepository
@@ -63,7 +62,7 @@ class SongRepository(
 
     override fun updateBookWithSong(bookId: Int, song: Song): Single<List<Song>> {
         return musicForBooksService
-            .updateBook(BookRequest(bookId, listOf(song.id)))
+            .updateBook(bookId, listOf(song.id))
             .subscribeOn(Schedulers.io())
             .flatMap { response ->
                 Single.just(idsFromList(response.spotifyIds))
