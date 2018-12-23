@@ -2,9 +2,9 @@ package io.fgonzaleva.musicforbooks.ui.search
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.transaction
 import io.fgonzaleva.musicforbooks.R
 import kotlinx.android.synthetic.main.activity_search.*
+import kotlinx.android.synthetic.main.content_search.*
 
 class SearchActivity : AppCompatActivity() {
 
@@ -17,16 +17,15 @@ class SearchActivity : AppCompatActivity() {
         setContentView(R.layout.activity_search)
         setSupportActionBar(toolbar)
 
-        val searchQuery = intent.extras?.getString(SEARCH_QUERY_EXTRA)!!
+        val searchQuery = intent.extras?.getString(SEARCH_QUERY_EXTRA)
+                          ?: throw IllegalArgumentException("A search_query_extra is needed for the activity to work")
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.title = searchQuery
 
-        val fragment = SearchFragment.create(searchQuery)
-        supportFragmentManager.transaction {
-            replace(R.id.fragment, fragment)
-        }
+        val pagerAdapter = SearchPagerAdapter(supportFragmentManager, this, searchQuery)
+        searchPager.adapter = pagerAdapter
     }
 
     override fun onSupportNavigateUp(): Boolean {

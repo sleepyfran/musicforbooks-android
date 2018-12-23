@@ -6,6 +6,8 @@ sealed class SearchResponse {
 
     object Loading : SearchResponse()
 
+    object NoResults : SearchResponse()
+
     data class Success(
         val results: List<BookItem>
     ): SearchResponse()

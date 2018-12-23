@@ -18,14 +18,18 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class SearchFragment : Fragment() {
 
     companion object {
-        fun create(query: String) =
-                SearchFragment().apply {
-                    this.query = query
-                }
+        fun create(
+            query: String,
+            searchType: SearchType = SearchType.BOOK
+        ) = SearchFragment().apply {
+            this.query = query
+            this.searchType = searchType
+        }
     }
 
     private val viewModel by viewModel<SearchViewModel>()
     private lateinit var query: String
+    private lateinit var searchType: SearchType
     private val adapter: BookListAdapter by inject()
 
     override fun onCreateView(
@@ -43,10 +47,11 @@ class SearchFragment : Fragment() {
             startActivity(bookDetailsIntent)
         }
 
-        viewModel.searchData.observe(this, Observer { response ->
+        viewModel.bookSearchData.observe(this, Observer { response ->
             when (response) {
                 is SearchResponse.Loading -> showLoading()
                 is SearchResponse.Success -> populateResults(response.results)
+                is SearchResponse.NoResults -> showError()
                 is SearchResponse.Error -> showError()
             }
         })
@@ -54,40 +59,43 @@ class SearchFragment : Fragment() {
         resultItems.adapter = adapter
         resultItems.layoutManager = LinearLayoutManager(context)
 
-        viewModel.loadResults(query)
+        when (searchType) {
+            SearchType.BOOK -> viewModel.loadBookResults(query)
+            SearchType.SONG -> viewModel.loadSongResults(query)
+        }
     }
 
-    fun showError() {
+    private fun showError() {
         hideLoading()
         hideResults()
         noResultsError.visibility = View.VISIBLE
     }
 
-    fun hideError() {
+    private fun hideError() {
         noResultsError.visibility = View.GONE
     }
 
-    fun showLoading() {
+    private fun showLoading() {
         hideResults()
         hideError()
         loading.visibility = View.VISIBLE
     }
 
-    fun hideLoading() {
+    private fun hideLoading() {
         loading.visibility = View.GONE
     }
 
-    fun showResults() {
+    private fun showResults() {
         hideLoading()
         hideError()
         resultItems.visibility = View.VISIBLE
     }
 
-    fun hideResults() {
+    private fun hideResults() {
         resultItems.visibility = View.GONE
     }
 
-    fun populateResults(results: List<BookItem>) {
+    private fun populateResults(results: List<BookItem>) {
         adapter.updateContent(results.toMutableList())
         showResults()
     }

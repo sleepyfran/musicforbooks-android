@@ -3,6 +3,8 @@ package io.fgonzaleva.musicforbooks.ui.search
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.fgonzaleva.musicforbooks.data.repositories.interfaces.SearchRepository
+import io.fgonzaleva.musicforbooks.data.repositories.model.BookItem
+import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 
@@ -11,23 +13,34 @@ class SearchViewModel(
 ) : ViewModel() {
 
     private val disposables = CompositeDisposable()
-    val searchData = MutableLiveData<SearchResponse>()
+    val bookSearchData = MutableLiveData<SearchResponse>()
 
-    fun loadResults(query: String) {
-        val searchDisposable = searchRepository
-            .searchBook(query)
+    private fun commonLoad(search: Single<List<BookItem>>) {
+        val searchDisposable = search
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnSubscribe { searchData.value = SearchResponse.Loading }
+            .doOnSubscribe { bookSearchData.value = SearchResponse.Loading }
             .subscribe(
                 {
-                    searchData.value = SearchResponse.Success(it)
+                    bookSearchData.value = if (it.isEmpty()) {
+                        SearchResponse.NoResults
+                    } else {
+                        SearchResponse.Success(it)
+                    }
                 },
                 {
-                    searchData.value = SearchResponse.Error(it)
+                    bookSearchData.value = SearchResponse.Error(it)
                 }
             )
 
         disposables.add(searchDisposable)
+    }
+
+    fun loadBookResults(query: String) {
+        commonLoad(searchRepository.searchBook(query))
+    }
+
+    fun loadSongResults(query: String) {
+        commonLoad(searchRepository.searchSong(query))
     }
 
 }

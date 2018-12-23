@@ -3,10 +3,7 @@ package io.fgonzaleva.musicforbooks.data.api.interfaces
 import io.fgonzaleva.musicforbooks.data.api.model.musicforbooks.BookResponse
 import io.fgonzaleva.musicforbooks.data.api.model.musicforbooks.FeedItemResponse
 import io.reactivex.Single
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Path
+import retrofit2.http.*
 
 interface MusicForBooksService {
 
@@ -15,6 +12,12 @@ interface MusicForBooksService {
 
     @GET("books/{id}")
     fun getBookSongs(@Path("id") bookId: Int): Single<BookResponse>
+
+    @GET("songs/{id}")
+    fun getBooksForSong(@Path("id") songId: String): Single<List<BookResponse>>
+
+    @GET("songs/")
+    fun getBooksForSongs(@Query("ids") ids: String): Single<List<BookResponse>>
 
     @POST("books/{id}")
     fun updateBook(@Path("id") bookId: Int, @Body songs: List<String>): Single<BookResponse>

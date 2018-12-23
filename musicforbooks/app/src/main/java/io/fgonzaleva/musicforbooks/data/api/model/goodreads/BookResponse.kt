@@ -8,6 +8,10 @@ import com.tickaroo.tikxml.annotation.Xml
 @Xml(name = "GoodreadsResponse")
 data class BookResponse(
     @Path("book")
+    @PropertyElement(name = "id")
+    val id: Int,
+
+    @Path("book")
     @PropertyElement(name = "title")
     val title: String,
 

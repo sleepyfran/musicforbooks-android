@@ -5,4 +5,5 @@ import io.reactivex.Single
 
 interface SearchRepository {
     fun searchBook(query: String): Single<List<BookItem>>
+    fun searchSong(query: String): Single<List<BookItem>>
 }

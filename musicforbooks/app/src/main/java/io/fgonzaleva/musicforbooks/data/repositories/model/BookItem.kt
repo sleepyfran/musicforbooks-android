@@ -1,5 +1,6 @@
 package io.fgonzaleva.musicforbooks.data.repositories.model
 
+import io.fgonzaleva.musicforbooks.data.api.model.goodreads.BookResponse
 import io.fgonzaleva.musicforbooks.data.api.model.musicforbooks.FeedItemResponse
 import io.fgonzaleva.musicforbooks.data.api.model.goodreads.BookResultResponse
 import io.fgonzaleva.musicforbooks.data.cache.model.FeedItemCache
@@ -35,6 +36,15 @@ data class BookItem(
                 response.authorName,
                 response.title,
                 response.goodReadsId,
+                response.imageUrl
+            )
+        }
+
+        fun fromBookResponse(response: BookResponse): BookItem {
+            return BookItem(
+                response.authors.first().name,
+                response.title,
+                response.id,
                 response.imageUrl
             )
         }

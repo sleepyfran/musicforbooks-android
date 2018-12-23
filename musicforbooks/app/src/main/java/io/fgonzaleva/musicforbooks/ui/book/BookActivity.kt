@@ -44,7 +44,7 @@ class BookActivity : AppCompatActivity() {
         }
 
         bookId = intent.extras?.getInt(BOOK_ID_EXTRA)
-                     ?: throw IllegalArgumentException("A book_id_extra is required for the activity to work")
+                 ?: throw IllegalArgumentException("A book_id_extra is required for the activity to work")
         val bookTitle = intent.extras?.getString(BOOK_TITLE_EXTRA)
                         ?: throw IllegalArgumentException("A book_title_extra is required for the activity to work")
 
