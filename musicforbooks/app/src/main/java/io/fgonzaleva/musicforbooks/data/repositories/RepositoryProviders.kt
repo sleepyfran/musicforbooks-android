@@ -1,6 +1,7 @@
 package io.fgonzaleva.musicforbooks.data.repositories
 
 import io.fgonzaleva.musicforbooks.data.repositories.interfaces.BookRepository
+import io.fgonzaleva.musicforbooks.data.repositories.interfaces.CacheRepository
 import io.fgonzaleva.musicforbooks.data.repositories.interfaces.FeedRepository
 import io.fgonzaleva.musicforbooks.data.repositories.interfaces.SearchRepository
 import io.fgonzaleva.musicforbooks.data.repositories.interfaces.SongRepository
@@ -15,6 +16,9 @@ class RepositoryProviders {
         factory<BookRepository> { io.fgonzaleva.musicforbooks.data.repositories.BookRepository() }
         factory<SpotifyTokenRepository> { io.fgonzaleva.musicforbooks.data.repositories.SpotifyTokenRepository() }
         factory<SongRepository> { io.fgonzaleva.musicforbooks.data.repositories.SongRepository(get(), get(), get()) }
+        factory<CacheRepository> {
+            io.fgonzaleva.musicforbooks.data.repositories.CacheRepository()
+        }
     }
 
 }

@@ -1,14 +1,13 @@
 package io.fgonzaleva.musicforbooks.data.cache
 
 import io.fgonzaleva.musicforbooks.data.cache.interfaces.CacheStrategy
-import org.joda.time.DateTime
+import io.fgonzaleva.musicforbooks.data.cache.model.CacheInvalidationTimeItem
+import org.joda.time.Instant
 
 class CacheStrategy : CacheStrategy {
 
-    var invalidationTime: DateTime = DateTime().plusDays(10)
-
-    override fun isCacheValid(cachedItems: List<Any>): Boolean {
-        return !cachedItems.isEmpty() && invalidationTime > DateTime()
+    override fun isCacheValid(cacheInvalidationTime: CacheInvalidationTimeItem): Boolean {
+        return cacheInvalidationTime.expirationTime > Instant()
     }
 
 }

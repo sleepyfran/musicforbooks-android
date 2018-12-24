@@ -96,11 +96,14 @@ class App : Application() {
     }
 
     private fun initializeDatabase(): AppDatabase {
-        return Room.databaseBuilder(
-            applicationContext,
-            AppDatabase::class.java,
-            "musicforbooks"
-        ).build()
+        return Room
+            .databaseBuilder(
+                applicationContext,
+                AppDatabase::class.java,
+                "musicforbooks"
+            )
+            .fallbackToDestructiveMigration()
+            .build()
     }
 
     private fun initializeMusicForBooksService(client: OkHttpClient): Retrofit {

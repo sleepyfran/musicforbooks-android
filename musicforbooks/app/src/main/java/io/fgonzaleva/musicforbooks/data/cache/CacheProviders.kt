@@ -9,6 +9,7 @@ class CacheProviders : KoinComponent {
     val module = module {
         single { get<AppDatabase>().feedCache() }
         single { get<AppDatabase>().spotifyTokenCache() }
+        single { get<AppDatabase>().cacheInvalidationTime() }
         single<CacheStrategy> { io.fgonzaleva.musicforbooks.data.cache.CacheStrategy() }
     }
 

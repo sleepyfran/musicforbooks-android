@@ -1,6 +1,7 @@
 package io.fgonzaleva.musicforbooks.data.cache
 
 import androidx.room.TypeConverter
+import io.fgonzaleva.musicforbooks.data.cache.model.CacheInvalidationTimeItem
 import org.joda.time.Instant
 
 class Converters {
@@ -13,6 +14,16 @@ class Converters {
     @TypeConverter
     fun dateToTimestamp(date: Instant?): Long? {
         return date?.millis
+    }
+
+    @TypeConverter
+    fun fromCacheType(cacheType: CacheInvalidationTimeItem.CacheType): String {
+        return cacheType.toString()
+    }
+
+    @TypeConverter
+    fun toCacheType(cacheType: String): CacheInvalidationTimeItem.CacheType {
+        return CacheInvalidationTimeItem.CacheType.valueOf(cacheType)
     }
 
 }
