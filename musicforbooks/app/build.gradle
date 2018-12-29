@@ -19,7 +19,7 @@ android {
     }
     buildTypes {
         debug {
-            buildConfigField 'String', 'BASE_API_URL', "\"http://10.0.2.2:8080/api/\""
+            buildConfigField 'String', 'BASE_API_URL', "\"https://musicforbooks.herokuapp.com/api/\""
             buildConfigField 'String', 'BASE_GOODREADS_URL', "\"https://www.goodreads.com/\""
             buildConfigField 'String', 'BASE_SPOTIFY_AUTH_URL', "\"https://accounts.spotify.com/api/\""
             buildConfigField 'String', 'BASE_SPOTIFY_URL', "\"https://api.spotify.com/v1/\""
