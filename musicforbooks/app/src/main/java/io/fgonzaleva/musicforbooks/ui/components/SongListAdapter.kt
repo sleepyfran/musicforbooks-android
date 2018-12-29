@@ -25,7 +25,11 @@ class SongListAdapter : RecyclerView.Adapter<SongListAdapter.ViewHolder>() {
         unfilteredSongs = songs.toList()
         val filteredList = songs.filter(filter)
         updateContent(filteredList.toMutableList())
-        notifyDataSetChanged()
+    }
+
+    fun <T : Comparable<T>> applySort(selector: (song: Song) -> T) {
+        val sortedSongs = songs.sortedBy(selector)
+        updateContent(sortedSongs.toMutableList())
     }
 
     fun unapplyFilter() {

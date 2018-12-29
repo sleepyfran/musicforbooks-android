@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,7 +19,7 @@ import kotlinx.android.synthetic.main.fragment_book.*
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class BookFragment : Fragment() {
+class BookFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
     companion object {
         fun create(
@@ -55,6 +56,9 @@ class BookFragment : Fragment() {
             // Handle the song click
         }
 
+        adapter.applySort { it.title }
+        sort.onItemSelectedListener = this
+
         onlyInstrumental.setOnCheckedChangeListener { _, isOnlyInstrumentalsChecked ->
             if (isOnlyInstrumentalsChecked) {
                 adapter.applyFilter { it.isInstrumental }
@@ -82,6 +86,18 @@ class BookFragment : Fragment() {
 
         viewModel.loadBook(bookId)
         viewModel.loadSongs(bookId)
+    }
+
+    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        when (position) {
+            1 -> adapter.applySort { it.artist } // by artist name
+            2 -> adapter.applySort { it.score } // by score
+            else -> adapter.applySort { it.title } // 0 and all others are by song title
+        }
+    }
+
+    override fun onNothingSelected(parent: AdapterView<*>?) {
+        // Not a possible situation.
     }
 
     fun refreshContent() {

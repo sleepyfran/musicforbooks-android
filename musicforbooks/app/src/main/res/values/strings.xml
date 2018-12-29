@@ -19,8 +19,9 @@
     <string name="book_sort_by">Sort by</string>
 
     <string-array name="book_available_sorts">
-        <item>name</item>
+        <item>title</item>
         <item>band</item>
+        <item>score</item>
     </string-array>
 
     <string name="book_see_on_goodreads">Open on GoodReads</string>
