@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MusicForBooks</string>
+    <string name="action_settings">Ajustes</string>
+    <string name="search_hint">Busca libros, autores o grupos</string>
+    <string name="song_search_hint">Busca un grupo o canción</string>
+    <string name="feed_description">Recomendaciones</string>
+    <string name="book_placeholder_title">Libro</string>
+    <string name="book_placeholder_author">Autor</string>
+    <string name="search_by_book">Por libro/autor</string>
+    <string name="search_by_song">Por canción/grupo</string>
+    <string name="error_loading">Hubo un error cargando el contenido. Inténtalo más tarde</string>
+    <string name="search_no_results">Sin resultados. Prueba con otro término</string>
+    <string name="book_only_instrumental">Instrumentales</string>
+    <string name="book_sort_by">Ordenar por</string>
+    <string name="book_see_on_goodreads">Abrir en GoodReads</string>
+    <string name="song_no_results">Parece que no tenemos canciones para este libro. ¡Añade la tuya!</string>
+    <string name="song_search_no_results">Sin resultados. Prueba con otro término</string>
+    <string name="song_search_start">No tengas vergüenza, ¡busca algo!</string>
+    <string name="song_add">Añadir nueva canción</string>
+    <string name="song_add_confirmation_title">Añadir canción</string>
+    <string name="song_add_confirmation_message">¿Estás seguro de añadir %1$s a este libro?</string>
+
+    <string-array name="book_available_sorts">
+        <item>título</item>
+        <item>grupo</item>
+        <item>puntos</item>
+    </string-array>
+</resources>
