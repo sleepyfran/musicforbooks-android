@@ -1,7 +1,7 @@
 package io.fgonzaleva.musicforbooks.data.repositories
 
 import io.fgonzaleva.musicforbooks.data.api.interfaces.MusicForBooksService
-import io.fgonzaleva.musicforbooks.data.cache.model.FeedItemCache
+import io.fgonzaleva.musicforbooks.data.cache.model.FeedCacheItem
 import io.fgonzaleva.musicforbooks.data.repositories.interfaces.CacheRepository
 import io.fgonzaleva.musicforbooks.data.repositories.model.BookItem
 import io.fgonzaleva.musicforbooks.data.repositories.interfaces.FeedRepository
@@ -38,7 +38,7 @@ class FeedRepository : FeedRepository, KoinComponent {
             .doOnSuccess { list ->
                 cacheRepository
                     .cacheFeedItems(
-                        list.map { FeedItemCache.fromResponse(it) }
+                        list.map { FeedCacheItem.fromResponse(it) }
                     )
                     .blockingAwait(5, TimeUnit.SECONDS)
             }

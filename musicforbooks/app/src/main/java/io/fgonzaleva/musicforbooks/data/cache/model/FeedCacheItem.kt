@@ -8,7 +8,7 @@ import io.fgonzaleva.musicforbooks.data.repositories.model.BookItem
 import java.util.*
 
 @Entity(tableName = "feedcache")
-data class FeedItemCache(
+data class FeedCacheItem(
     @PrimaryKey var uid: String = UUID.randomUUID().toString(),
     @ColumnInfo(name = "author_name") var authorName: String,
     @ColumnInfo(name = "book_title") var bookTitle: String,
@@ -17,8 +17,8 @@ data class FeedItemCache(
 ) {
 
     companion object {
-        fun fromItem(item: BookItem): FeedItemCache {
-            return FeedItemCache(
+        fun fromItem(item: BookItem): FeedCacheItem {
+            return FeedCacheItem(
                 authorName = item.authorName,
                 bookTitle = item.bookTitle,
                 goodReadsId = item.goodReadsId,
@@ -26,8 +26,8 @@ data class FeedItemCache(
             )
         }
 
-        fun fromResponse(response: FeedItemResponse): FeedItemCache {
-            return FeedItemCache(
+        fun fromResponse(response: FeedItemResponse): FeedCacheItem {
+            return FeedCacheItem(
                 authorName = response.authorName,
                 bookTitle = response.bookTitle,
                 goodReadsId = response.goodReadsId,

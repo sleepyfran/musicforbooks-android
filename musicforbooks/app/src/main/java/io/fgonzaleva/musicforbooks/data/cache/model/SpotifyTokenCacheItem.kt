@@ -8,15 +8,15 @@ import org.joda.time.Instant
 import java.util.*
 
 @Entity(tableName = "spotifytokencache")
-data class SpotifyTokenItemCache(
+data class SpotifyTokenCacheItem(
     @PrimaryKey var uid: String = UUID.randomUUID().toString(),
     @ColumnInfo(name = "token") var token: String,
     @ColumnInfo(name = "expiration_time") var expirationTime: Instant
 ) {
 
     companion object {
-        fun fromResponse(response: TokenResponse): SpotifyTokenItemCache {
-            return SpotifyTokenItemCache(
+        fun fromResponse(response: TokenResponse): SpotifyTokenCacheItem {
+            return SpotifyTokenCacheItem(
                 token = "Bearer ${response.accessToken}",
                 expirationTime = Instant().plus(response.expiresIn)
             )

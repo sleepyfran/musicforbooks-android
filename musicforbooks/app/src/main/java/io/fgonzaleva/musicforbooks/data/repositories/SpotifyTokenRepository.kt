@@ -3,7 +3,7 @@ package io.fgonzaleva.musicforbooks.data.repositories
 import io.fgonzaleva.musicforbooks.data.api.HeaderProvider
 import io.fgonzaleva.musicforbooks.data.api.interfaces.SpotifyAuthService
 import io.fgonzaleva.musicforbooks.data.cache.interfaces.SpotifyTokenCache
-import io.fgonzaleva.musicforbooks.data.cache.model.SpotifyTokenItemCache
+import io.fgonzaleva.musicforbooks.data.cache.model.SpotifyTokenCacheItem
 import io.fgonzaleva.musicforbooks.data.repositories.interfaces.SpotifyTokenRepository
 import io.fgonzaleva.musicforbooks.data.repositories.model.SpotifyToken
 import io.reactivex.Completable
@@ -29,7 +29,7 @@ class SpotifyTokenRepository : SpotifyTokenRepository, KoinComponent {
                 spotifyAuthService
                     .getToken(headerProvider.generateSpotifyAuthHeader())
                     .map { response ->
-                        SpotifyTokenItemCache.fromResponse(response)
+                        SpotifyTokenCacheItem.fromResponse(response)
                     }
                     .doOnSuccess {
                         Completable

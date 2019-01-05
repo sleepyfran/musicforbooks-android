@@ -4,11 +4,10 @@ import io.fgonzaleva.musicforbooks.data.cache.interfaces.CacheInvalidationTime
 import io.fgonzaleva.musicforbooks.data.cache.interfaces.CacheStrategy
 import io.fgonzaleva.musicforbooks.data.cache.interfaces.FeedCache
 import io.fgonzaleva.musicforbooks.data.cache.model.CacheInvalidationTimeItem
-import io.fgonzaleva.musicforbooks.data.cache.model.FeedItemCache
+import io.fgonzaleva.musicforbooks.data.cache.model.FeedCacheItem
 import io.fgonzaleva.musicforbooks.data.repositories.interfaces.CacheRepository
 import io.reactivex.Completable
 import io.reactivex.Maybe
-import io.reactivex.Single
 import org.joda.time.DateTime
 import org.joda.time.Instant
 import org.koin.standalone.KoinComponent
@@ -25,7 +24,7 @@ class CacheRepository : CacheRepository, KoinComponent {
         return cacheInvalidationTime.getByType(type)
     }
 
-    override fun cacheFeedItems(feedItems: List<FeedItemCache>): Completable {
+    override fun cacheFeedItems(feedItems: List<FeedCacheItem>): Completable {
         val tenDays = DateTime().plusDays(10).toInstant()
         val invalidationTime = CacheInvalidationTimeItem(
             cacheType = CacheInvalidationTimeItem.CacheType.FEED,
@@ -37,7 +36,7 @@ class CacheRepository : CacheRepository, KoinComponent {
             .andThen(cacheInvalidationTime.insert(invalidationTime))
     }
 
-    override fun getCachedFeedItems(): Maybe<List<FeedItemCache>> {
+    override fun getCachedFeedItems(): Maybe<List<FeedCacheItem>> {
         return feedCache
             .getAll()
             .flatMapMaybe { items ->

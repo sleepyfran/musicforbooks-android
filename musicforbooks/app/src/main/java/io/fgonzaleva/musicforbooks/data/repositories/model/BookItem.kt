@@ -3,7 +3,7 @@ package io.fgonzaleva.musicforbooks.data.repositories.model
 import io.fgonzaleva.musicforbooks.data.api.model.goodreads.BookResponse
 import io.fgonzaleva.musicforbooks.data.api.model.musicforbooks.FeedItemResponse
 import io.fgonzaleva.musicforbooks.data.api.model.goodreads.BookResultResponse
-import io.fgonzaleva.musicforbooks.data.cache.model.FeedItemCache
+import io.fgonzaleva.musicforbooks.data.cache.model.FeedCacheItem
 
 data class BookItem(
     val authorName: String,
@@ -13,7 +13,7 @@ data class BookItem(
 ) {
 
     companion object {
-        fun fromFeedItemCache(cache: FeedItemCache): BookItem {
+        fun fromFeedItemCache(cache: FeedCacheItem): BookItem {
             return BookItem(
                 cache.authorName,
                 cache.bookTitle,

@@ -1,6 +1,6 @@
 package io.fgonzaleva.musicforbooks.data.repositories.model
 
-import io.fgonzaleva.musicforbooks.data.cache.model.SpotifyTokenItemCache
+import io.fgonzaleva.musicforbooks.data.cache.model.SpotifyTokenCacheItem
 import org.joda.time.Instant
 
 data class SpotifyToken(
@@ -10,7 +10,7 @@ data class SpotifyToken(
 ) {
 
     companion object {
-        fun fromCacheItem(item: SpotifyTokenItemCache): SpotifyToken {
+        fun fromCacheItem(item: SpotifyTokenCacheItem): SpotifyToken {
             return SpotifyToken(
                 token = item.token,
                 type = "",
