@@ -38,9 +38,10 @@ class BookActivity : AppCompatActivity() {
         setContentView(R.layout.activity_book)
         setSupportActionBar(toolbar)
 
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
+        fab.setOnClickListener {
+            val searchIntent = Intent(this, AddSongActivity::class.java)
+            searchIntent.putExtra(AddSongActivity.BOOK_ID_EXTRA, bookId)
+            startActivityForResult(searchIntent, AddSongActivity.SONGS_UPDATED)
         }
 
         bookId = intent.extras?.getInt(BOOK_ID_EXTRA)
@@ -76,15 +77,15 @@ class BookActivity : AppCompatActivity() {
         return super.onCreateOptionsMenu(menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
-        R.id.action_add_new_song -> {
-            val searchIntent = Intent(this, AddSongActivity::class.java)
-            searchIntent.putExtra(AddSongActivity.BOOK_ID_EXTRA, bookId)
-            startActivityForResult(searchIntent, AddSongActivity.SONGS_UPDATED)
-            true
-        }
-        else -> super.onOptionsItemSelected(item)
-    }
+//    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
+//        R.id.action_add_new_song -> {
+//            val searchIntent = Intent(this, AddSongActivity::class.java)
+//            searchIntent.putExtra(AddSongActivity.BOOK_ID_EXTRA, bookId)
+//            startActivityForResult(searchIntent, AddSongActivity.SONGS_UPDATED)
+//            true
+//        }
+//        else -> super.onOptionsItemSelected(item)
+//    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
