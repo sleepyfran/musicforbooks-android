@@ -47,7 +47,7 @@ class FeedRepositoryTest : BaseTest(), KoinTest {
     @Test
     fun getFeed_should_fetch_data_from_the_API_if_no_cache_is_present() {
         Mockito
-            .`when`(cacheStrategy.isCacheValid(anyList()))
+            .`when`(cacheStrategy.isCacheValid(any()))
             .thenReturn(false)
 
         feedRepository
@@ -65,7 +65,7 @@ class FeedRepositoryTest : BaseTest(), KoinTest {
     @Test
     fun getFeed_should_return_cached_items_when_cache_is_present() {
         Mockito
-            .`when`(cacheStrategy.isCacheValid(anyList()))
+            .`when`(cacheStrategy.isCacheValid(any()))
             .thenReturn(true)
 
         feedRepository
