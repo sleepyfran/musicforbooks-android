@@ -57,11 +57,7 @@ class BookActivity : AppCompatActivity() {
             supportActionBar?.title = book.title
         }
 
-        val onEmptyResults = {
-            fab.hide()
-        }
-
-        fragment = BookFragment.create(bookId, onBookLoaded, onEmptyResults)
+        fragment = BookFragment.create(bookId, onBookLoaded, { })
         supportFragmentManager.transaction {
             replace(R.id.fragment, fragment)
         }
@@ -76,16 +72,6 @@ class BookActivity : AppCompatActivity() {
         menuInflater.inflate(R.menu.menu_book, menu)
         return super.onCreateOptionsMenu(menu)
     }
-
-//    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
-//        R.id.action_add_new_song -> {
-//            val searchIntent = Intent(this, AddSongActivity::class.java)
-//            searchIntent.putExtra(AddSongActivity.BOOK_ID_EXTRA, bookId)
-//            startActivityForResult(searchIntent, AddSongActivity.SONGS_UPDATED)
-//            true
-//        }
-//        else -> super.onOptionsItemSelected(item)
-//    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
